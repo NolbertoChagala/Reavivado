@@ -38,9 +38,9 @@ export default function ReavivadoApp() {
   // Obtener toda la semana de lecturas (7 días)
   const semana = obtenerSemanaActual(hoy);
 
-  // Scroll al inicio cuando se cambia a la vista "día"
+  // Scroll al inicio cuando se cambia a la vista "día" o "mes"
   useEffect(() => {
-    if (vista === "dia") {
+    if (vista === "dia" || vista === "mes") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [vista]);
@@ -78,7 +78,10 @@ export default function ReavivadoApp() {
                 Calendario del Mes
               </h2>
             </div>
-            <CalendarioMensual fecha={hoy} />
+            <CalendarioMensual 
+              fecha={hoy}
+              onVerDia={() => setVista("dia")}
+            />
           </div>
         )}
       </main>
