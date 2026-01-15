@@ -61,8 +61,8 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
 
   return (
     <div className="space-y-4">
-      {/* HEADER INFORMACIÓN DEL DÍA - Sticky */}
-      <div className="sticky top-0 z-20 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl md:rounded-2xl p-5 md:p-8 shadow-lg border border-slate-700">
+      {/* HEADER INFORMACIÓN DEL DÍA */}
+      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl md:rounded-2xl p-5 md:p-8 shadow-lg border border-slate-700">
         {/* Fila 1: Mes y Año + Navegación */}
         <div className="flex items-center justify-between mb-4 md:mb-6">
           <button
