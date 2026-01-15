@@ -32,7 +32,14 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
     semanas.push(dias.slice(i, i + 7));
   }
 
-  const irAlMesAnterior = () => setMesActual(subMonths(mesActual, 1));
+  const irAlMesAnterior = () => {
+    const mesPrevio = subMonths(mesActual, 1);
+    // No permitir ir antes de enero de 2026 (año de inicio del plan)
+    if (mesPrevio.getFullYear() >= 2026) {
+      setMesActual(mesPrevio);
+    }
+  };
+
   const irAlProximoMes = () => setMesActual(addMonths(mesActual, 1));
 
   // Scrollear automáticamente al día actual cuando carga o cambia el mes
@@ -49,6 +56,9 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
   const hoy = new Date();
   const lecturaHoy = obtenerLecturaPorFecha(hoy);
 
+  // Verificar si se puede retroceder
+  const puedeRetroceder = subMonths(mesActual, 1).getFullYear() >= 2026;
+
   return (
     <div className="space-y-4">
       {/* HEADER INFORMACIÓN DEL DÍA - Sticky */}
@@ -57,11 +67,16 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
         <div className="flex items-center justify-between mb-4 md:mb-6">
           <button
             onClick={irAlMesAnterior}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+            disabled={!puedeRetroceder}
+            className={`p-2 rounded-lg transition-colors ${
+              puedeRetroceder
+                ? "hover:bg-slate-700 cursor-pointer text-slate-300"
+                : "opacity-40 cursor-not-allowed text-slate-500"
+            }`}
             aria-label="Mes anterior"
-            title="Mes anterior"
+            title={puedeRetroceder ? "Mes anterior" : "No puedes retroceder más"}
           >
-            <ChevronLeft size={24} className="text-slate-300" />
+            <ChevronLeft size={24} />
           </button>
 
           <div className="text-center flex-1">
