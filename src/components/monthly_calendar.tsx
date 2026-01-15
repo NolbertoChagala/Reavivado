@@ -45,42 +45,82 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
     return () => clearTimeout(timer);
   }, []);
 
+  // Obtener información del día actual
+  const hoy = new Date();
+  const lecturaHoy = obtenerLecturaPorFecha(hoy);
+
   return (
-    <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden border border-slate-200">
-      {/* Header con mes y año + Navegación - STICKY */}
-      <div className="sticky top-0 z-20 bg-gradient-to-r from-teal-700 to-teal-800 p-4 md:p-8 shadow-md">
-        <div className="flex items-center justify-between gap-2 md:gap-4">
+    <div className="space-y-4">
+      {/* HEADER INFORMACIÓN DEL DÍA - Sticky */}
+      <div className="sticky top-0 z-20 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl md:rounded-2xl p-5 md:p-8 shadow-lg border border-slate-700">
+        {/* Fila 1: Mes y Año + Navegación */}
+        <div className="flex items-center justify-between mb-4 md:mb-6">
           <button
             onClick={irAlMesAnterior}
-            className="p-2 hover:bg-teal-600 rounded-lg transition-colors"
+            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
             aria-label="Mes anterior"
             title="Mes anterior"
           >
-            <ChevronLeft size={24} className="text-white" />
+            <ChevronLeft size={24} className="text-slate-300" />
           </button>
 
           <div className="text-center flex-1">
-            <h2 className="text-white font-black text-xl md:text-4xl tracking-wider">
-              {format(inicio, "MMMM", { locale: es }).toUpperCase()}
-            </h2>
-            <p className="text-teal-100 font-semibold text-xs md:text-base">
-              {format(inicio, "yyyy")}
+            <p className="text-slate-400 text-xs md:text-sm font-semibold uppercase tracking-widest mb-1">
+              Calendario del mes
             </p>
+            <h2 className="text-white font-black text-2xl md:text-4xl tracking-wider">
+              {format(inicio, "MMMM yyyy", { locale: es }).toUpperCase()}
+            </h2>
           </div>
 
           <button
             onClick={irAlProximoMes}
-            className="p-2 hover:bg-teal-600 rounded-lg transition-colors"
+            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
             aria-label="Próximo mes"
             title="Próximo mes"
           >
-            <ChevronRight size={24} className="text-white" />
+            <ChevronRight size={24} className="text-slate-300" />
           </button>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent mb-4 md:mb-6"></div>
+
+        {/* Fila 2: Información del día actual */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Día del mes */}
+          <div className="text-center">
+            <p className="text-slate-400 text-xs font-semibold uppercase mb-1">Día</p>
+            <p className="text-white font-black text-3xl md:text-4xl">
+              {format(hoy, "d")}
+            </p>
+          </div>
+
+          {/* Nombre del día */}
+          <div className="text-center">
+            <p className="text-slate-400 text-xs font-semibold uppercase mb-1">Hoy es</p>
+            <p className="text-teal-300 font-bold text-sm md:text-base capitalize">
+              {format(hoy, "EEEE", { locale: es })}
+            </p>
+          </div>
+
+          {/* Libro */}
+          <div className="col-span-2 md:col-span-2">
+            <p className="text-slate-400 text-xs font-semibold uppercase mb-1">Estudia</p>
+            <div className="bg-slate-700/50 rounded-lg p-3 border border-slate-600">
+              <p className="text-white font-bold text-sm md:text-base">{lecturaHoy.libro}</p>
+              <p className="text-teal-300 font-semibold text-xs md:text-sm">
+                {LABELS.capitulo} {lecturaHoy.capitulo}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Contenedor responsivo */}
-      <div className="p-2 md:p-6">
+      {/* CALENDARIO */}
+      <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden border border-slate-200">
+        {/* Contenedor responsivo */}
+        <div className="p-2 md:p-6">
         {/* Vista móvil: Lista de días */}
         <div className="md:hidden space-y-2">
           {dias.map((dia) => {
@@ -194,6 +234,7 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
               </div>
             </div>
           ))}
+        </div>
         </div>
       </div>
     </div>
