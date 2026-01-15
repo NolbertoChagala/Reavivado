@@ -12,7 +12,7 @@ import {
 } from "date-fns";
 import { es } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { LABELS } from "@/constants/app";
 
 export default function CalendarioMensual({ fecha }: { fecha: Date }) {
@@ -35,23 +35,24 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
   const irAlMesAnterior = () => setMesActual(subMonths(mesActual, 1));
   const irAlProximoMes = () => setMesActual(addMonths(mesActual, 1));
 
-  // Función para scrollear al día actual dentro del calendario
-  const scrollAlDiaActual = () => {
-    if (refDiaHoy.current) {
-      setTimeout(() => {
-        refDiaHoy.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 100);
-    }
-  };
+  // Scrollear automáticamente al día actual cuando carga o cambia el mes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (refDiaHoy.current) {
+        refDiaHoy.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden border border-slate-200">
-      {/* Header con mes y año + Navegación */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-4 md:p-8">
+      {/* Header con mes y año + Navegación - STICKY */}
+      <div className="sticky top-0 z-20 bg-gradient-to-r from-teal-700 to-teal-800 p-4 md:p-8 shadow-md">
         <div className="flex items-center justify-between gap-2 md:gap-4">
           <button
             onClick={irAlMesAnterior}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-teal-600 rounded-lg transition-colors"
             aria-label="Mes anterior"
             title="Mes anterior"
           >
@@ -59,17 +60,17 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
           </button>
 
           <div className="text-center flex-1">
-            <h2 className="text-white font-black text-lg md:text-4xl tracking-wider">
+            <h2 className="text-white font-black text-xl md:text-4xl tracking-wider">
               {format(inicio, "MMMM", { locale: es }).toUpperCase()}
             </h2>
-            <p className="text-slate-400 font-semibold text-xs md:text-base">
+            <p className="text-teal-100 font-semibold text-xs md:text-base">
               {format(inicio, "yyyy")}
             </p>
           </div>
 
           <button
             onClick={irAlProximoMes}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-teal-600 rounded-lg transition-colors"
             aria-label="Próximo mes"
             title="Próximo mes"
           >
@@ -194,16 +195,6 @@ export default function CalendarioMensual({ fecha }: { fecha: Date }) {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Botón "Ver día" solo en móvil */}
-      <div className="md:hidden p-4 border-t border-slate-200">
-        <button
-          onClick={scrollAlDiaActual}
-          className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition-colors"
-        >
-          Ver día actual
-        </button>
       </div>
     </div>
   );
