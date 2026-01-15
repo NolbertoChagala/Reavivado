@@ -78,10 +78,7 @@ export default function ReavivadoApp() {
                 Calendario del Mes
               </h2>
             </div>
-            <CalendarioMensual 
-              fecha={hoy}
-              onVerDia={() => setVista("dia")}
-            />
+            <CalendarioMensual fecha={hoy} />
           </div>
         )}
       </main>

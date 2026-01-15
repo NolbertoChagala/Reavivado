@@ -12,11 +12,12 @@ import {
 } from "date-fns";
 import { es } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { LABELS } from "@/constants/app";
 
-export default function CalendarioMensual({ fecha, onVerDia }: { fecha: Date; onVerDia?: () => void }) {
+export default function CalendarioMensual({ fecha }: { fecha: Date }) {
   const [mesActual, setMesActual] = useState(fecha);
+  const refDiaHoy = useRef<HTMLDivElement>(null);
 
   const inicio = startOfMonth(mesActual);
   const fin = endOfMonth(mesActual);
@@ -33,6 +34,15 @@ export default function CalendarioMensual({ fecha, onVerDia }: { fecha: Date; on
 
   const irAlMesAnterior = () => setMesActual(subMonths(mesActual, 1));
   const irAlProximoMes = () => setMesActual(addMonths(mesActual, 1));
+
+  // Función para scrollear al día actual dentro del calendario
+  const scrollAlDiaActual = () => {
+    if (refDiaHoy.current) {
+      setTimeout(() => {
+        refDiaHoy.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden border border-slate-200">
@@ -152,6 +162,7 @@ export default function CalendarioMensual({ fecha, onVerDia }: { fecha: Date; on
                   return (
                     <div
                       key={dia.toString()}
+                      ref={esHoy ? refDiaHoy : null}
                       className={`border-2 p-4 rounded-xl flex flex-col justify-between min-h-[130px] transition-all ${
                         esHoy
                           ? "bg-teal-50 border-teal-500 shadow-md"
@@ -186,16 +197,14 @@ export default function CalendarioMensual({ fecha, onVerDia }: { fecha: Date; on
       </div>
 
       {/* Botón "Ver día" solo en móvil */}
-      {onVerDia && (
-        <div className="md:hidden p-4 border-t border-slate-200">
-          <button
-            onClick={onVerDia}
-            className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition-colors"
-          >
-            Ver día actual
-          </button>
-        </div>
-      )}
+      <div className="md:hidden p-4 border-t border-slate-200">
+        <button
+          onClick={scrollAlDiaActual}
+          className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition-colors"
+        >
+          Ver día actual
+        </button>
+      </div>
     </div>
   );
 }
