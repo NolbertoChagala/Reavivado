@@ -6,6 +6,11 @@ export const librosBiblicos = [
     {nombre: "2 Reyes", capitulos: 25},
     {nombre: "1 Crónicas", capitulos: 29},
     {nombre: "2 Crónicas", capitulos: 36},
+    {nombre: "Esdras", capitulos: 10},
+    {nombre: "Nehemías", capitulos: 13},
+    {nombre: "Ester", capitulos: 10},
+    {nombre: "Job", capitulos: 42},
+    {nombre: "Salmos", capitulos: 150},
 ]
 
 // Fechas de inicio y puntos de partida del plan de lectura
