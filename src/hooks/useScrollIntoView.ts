@@ -1,4 +1,3 @@
-// Hook para manejar el scroll a un elemento específico
 import { useEffect, useRef } from "react";
 
 export function useScrollIntoView(shouldScroll: boolean) {
@@ -6,7 +5,6 @@ export function useScrollIntoView(shouldScroll: boolean) {
 
   useEffect(() => {
     if (shouldScroll && ref.current) {
-      // Pequeño delay para asegurar que el DOM esté completamente renderizado
       setTimeout(() => {
         ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 100);

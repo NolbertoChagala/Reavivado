@@ -1,4 +1,5 @@
-// src/components/CalendarioMensual.tsx
+"use client";
+
 import { obtenerLecturaPorFecha } from "@/lib/bibleLogic";
 import {
   eachDayOfInterval,
@@ -9,249 +10,153 @@ import {
   endOfWeek,
   addMonths,
   subMonths,
+  isSameMonth,
+  isSameDay,
 } from "date-fns";
 import { es } from "date-fns/locale";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight, Download, Calendar as CalendarIcon } from "lucide-react";
+import { useState } from "react";
 import { LABELS } from "@/constants/app";
+import CultoJoven from "@/assets/img/CultoJoven.webp";
 
 export default function CalendarioMensual({ fecha }: { fecha: Date }) {
   const [mesActual, setMesActual] = useState(fecha);
-  const refDiaHoy = useRef<HTMLDivElement>(null);
 
-  const inicio = startOfMonth(mesActual);
-  const fin = endOfMonth(mesActual);
-  const semanaInicio = startOfWeek(inicio, { weekStartsOn: 0 });
-  const semanaFin = endOfWeek(fin, { weekStartsOn: 0 });
-
+  const inicioMes = startOfMonth(mesActual);
+  const finMes = endOfMonth(mesActual);
+  const semanaInicio = startOfWeek(inicioMes, { weekStartsOn: 0 });
+  const semanaFin = endOfWeek(finMes, { weekStartsOn: 0 });
   const dias = eachDayOfInterval({ start: semanaInicio, end: semanaFin });
-  const semanas: Date[][] = [];
 
-  // Agrupar días por semanas
-  for (let i = 0; i < dias.length; i += 7) {
-    semanas.push(dias.slice(i, i + 7));
-  }
-
-  const irAlMesAnterior = () => {
-    const mesPrevio = subMonths(mesActual, 1);
-    // No permitir ir antes de enero de 2026 (año de inicio del plan)
-    if (mesPrevio.getFullYear() >= 2026) {
-      setMesActual(mesPrevio);
-    }
-  };
-
-  const irAlProximoMes = () => setMesActual(addMonths(mesActual, 1));
-
-  // Scrollear automáticamente al día actual cuando carga o cambia el mes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (refDiaHoy.current) {
-        refDiaHoy.current.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Obtener información del día actual
   const hoy = new Date();
-  const lecturaHoy = obtenerLecturaPorFecha(hoy);
-
-  // Verificar si se puede retroceder
-  const puedeRetroceder = subMonths(mesActual, 1).getFullYear() >= 2026;
 
   return (
-    <div className="space-y-4">
-      {/* HEADER INFORMACIÓN DEL DÍA */}
-      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl md:rounded-2xl p-5 md:p-8 shadow-lg border border-slate-700">
-        {/* Fila 1: Mes y Año + Navegación */}
-        <div className="flex items-center justify-between mb-4 md:mb-6">
-          <button
-            onClick={irAlMesAnterior}
-            disabled={!puedeRetroceder}
-            className={`p-2 rounded-lg transition-colors ${
-              puedeRetroceder
-                ? "hover:bg-slate-700 cursor-pointer text-slate-300"
-                : "opacity-40 cursor-not-allowed text-slate-500"
-            }`}
-            aria-label="Mes anterior"
-            title={puedeRetroceder ? "Mes anterior" : "No puedes retroceder más"}
-          >
-            <ChevronLeft size={24} />
-          </button>
-
-          <div className="text-center flex-1">
-            <p className="text-slate-400 text-xs md:text-sm font-semibold uppercase tracking-widest mb-1">
-              Calendario del mes
-            </p>
-            <h2 className="text-white font-black text-2xl md:text-4xl tracking-wider">
-              {format(inicio, "MMMM yyyy", { locale: es }).toUpperCase()}
-            </h2>
-          </div>
-
-          <button
-            onClick={irAlProximoMes}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
-            aria-label="Próximo mes"
-            title="Próximo mes"
-          >
-            <ChevronRight size={24} className="text-slate-300" />
-          </button>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent mb-4 md:mb-6"></div>
-
-        {/* Fila 2: Información del día actual */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* Día del mes */}
-          <div className="text-center">
-            <p className="text-slate-400 text-xs font-semibold uppercase mb-1">Día</p>
-            <p className="text-white font-black text-3xl md:text-4xl">
-              {format(hoy, "d")}
-            </p>
-          </div>
-
-          {/* Nombre del día */}
-          <div className="text-center">
-            <p className="text-slate-400 text-xs font-semibold uppercase mb-1">Hoy es</p>
-            <p className="text-teal-300 font-bold text-sm md:text-base capitalize">
-              {format(hoy, "EEEE", { locale: es })}
-            </p>
-          </div>
-
-          {/* Libro */}
-          <div className="col-span-2 md:col-span-2">
-            <p className="text-slate-400 text-xs font-semibold uppercase mb-1">Estudia</p>
-            <div className="bg-slate-700/50 rounded-lg p-3 border border-slate-600">
-              <p className="text-white font-bold text-sm md:text-base">{lecturaHoy.libro}</p>
-              <p className="text-teal-300 font-semibold text-xs md:text-sm">
-                {LABELS.capitulo} {lecturaHoy.capitulo}
+    <div className="w-full min-h-screen bg-white font-sans text-slate-900">
+      
+      {/* HEADER INSTITUCIONAL */}
+      <header className="w-full border-b-[8px] md:border-b-[12px] border-slate-900 py-10 md:py-16 bg-[#003366] px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-end gap-8">
+          <div className="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
+            <div className="w-24 h-24 md:w-32 md:h-32 bg-white rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 border-4 border-white/10">
+              <Image
+                src={CultoJoven}
+                alt="Logo JA"
+                priority
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-center md:justify-start gap-2 text-slate-300">
+                <CalendarIcon size={14} />
+                <span className="text-[10px] font-black uppercase tracking-[0.4em]">Plan de Lectura 2026</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-none text-white">
+                Reavivados
+              </h1>
+              <p className="text-sm md:text-lg font-light text-slate-200 italic">
+                Sociedad de Jóvenes • Villas Otoch 4
               </p>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* CALENDARIO */}
-      <div className="bg-white rounded-xl md:rounded-2xl shadow-lg overflow-hidden border border-slate-200">
-        {/* Contenedor responsivo */}
-        <div className="p-2 md:p-6">
-        {/* Vista móvil: Lista de días */}
-        <div className="md:hidden space-y-2">
-          {dias.map((dia) => {
-            const esDiaDelMes = dia.getMonth() === inicio.getMonth();
-            const esHoy = dia.toDateString() === new Date().toDateString();
-
-            if (!esDiaDelMes) return null;
-
-            const lectura = obtenerLecturaPorFecha(dia);
-
-            return (
-              <div
-                key={dia.toString()}
-                className={`flex justify-between items-center p-4 rounded-xl border-2 transition-all ${
-                  esHoy
-                    ? "bg-teal-50 border-teal-500 shadow-md"
-                    : "bg-white border-slate-200 hover:border-slate-300"
-                }`}
-              >
-                <div className="flex flex-col gap-1">
-                  <span className="text-xs font-bold text-slate-500 uppercase">
-                    {format(dia, "EEEE", { locale: es })} {format(dia, "d")}
-                  </span>
-                  <div>
-                    <span className="text-slate-800 font-bold text-sm block">
-                      {lectura.libro}
-                    </span>
-                    <span className="text-teal-600 font-semibold text-xs">
-                      {LABELS.capitulo} {lectura.capitulo}
-                    </span>
-                  </div>
-                </div>
-                {esHoy && (
-                  <span className="text-xs font-bold text-white px-3 py-1 bg-teal-500 rounded-full">
-                    {LABELS.hoy}
-                  </span>
-                )}
-              </div>
-            );
-          })}
+      <main className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-16 space-y-10">
+        
+        {/* SELECTOR DE MES */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+          <div className="flex items-center gap-4 order-2 md:order-1">
+            <button
+              onClick={() => setMesActual(subMonths(mesActual, 1))}
+              className="p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-900 hover:text-white transition-all shadow-sm active:scale-90"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <h2 className="text-2xl font-black uppercase italic tracking-tighter text-slate-900 min-w-[150px] text-center">
+              {format(mesActual, "MMMM", { locale: es })}
+            </h2>
+            <button
+              onClick={() => setMesActual(addMonths(mesActual, 1))}
+              className="p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-900 hover:text-white transition-all shadow-sm active:scale-90"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
 
-        {/* Vista desktop: Grilla */}
-        <div className="hidden md:block">
-          {semanas.map((semana, semanaIdx) => (
-            <div key={semanaIdx} className="mb-4">
-              {/* Headers de días solo en la primera semana */}
-              {semanaIdx === 0 && (
-                <div className="grid grid-cols-7 gap-2 mb-2">
-                  {["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"].map(
-                    (d) => (
-                      <div
-                        key={d}
-                        className="text-center font-bold text-slate-600 text-sm py-2 border-b-2 border-slate-200"
-                      >
-                        {d.slice(0, 3)}
-                      </div>
-                    )
+        {/* CALENDARIO / AGENDA */}
+        <div className="bg-white md:rounded-3xl md:border md:border-slate-200 md:shadow-xl md:overflow-hidden">
+          
+          {/* Header Días PC */}
+          <div className="hidden md:grid grid-cols-7 bg-slate-900 text-white border-b border-slate-800">
+            {["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"].map((d) => (
+              <div key={d} className="py-4 text-[10px] font-black uppercase tracking-[0.2em] text-center opacity-60">
+                {d}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-7 md:gap-px md:bg-slate-200">
+            {dias.map((dia) => {
+              const esDiaDelMes = isSameMonth(dia, inicioMes);
+              const esHoy = isSameDay(dia, hoy);
+              const lectura = obtenerLecturaPorFecha(dia);
+
+              if (!esDiaDelMes && typeof window !== "undefined" && window.innerWidth < 768) return null;
+
+              return (
+                <div
+                  key={dia.toString()}
+                  className={`
+                    relative flex flex-row md:flex-col min-h-0 md:min-h-[140px] p-5 md:p-4 transition-all
+                    ${esDiaDelMes ? "bg-white" : "bg-slate-50 md:opacity-40"}
+                    ${esHoy ? "border-l-[6px] border-[#003366] md:border-l-0 md:bg-blue-50/40" : ""}
+                    border-b md:border-b-0 border-slate-100
+                  `}
+                >
+                  {/* Fecha y Indicador de HOY */}
+                  <div className="flex flex-col items-center justify-center md:items-start md:justify-between mb-0 md:mb-4 mr-6 md:mr-0 w-12 md:w-full border-r md:border-r-0 border-slate-100 pr-4 md:pr-0">
+                    <span className={`text-2xl md:text-xl font-black italic tabular-nums leading-none ${esHoy ? "text-[#003366]" : "text-slate-900"}`}>
+                      {format(dia, "d")}
+                    </span>
+                    {esHoy ? (
+                      <span className="text-[9px] font-black uppercase tracking-tighter text-[#003366] mt-1 italic">Hoy</span>
+                    ) : (
+                      <span className="text-[9px] font-black uppercase tracking-widest text-slate-300 mt-1">
+                        {format(dia, "EEE", { locale: es })}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Contenido Lectura (Limpio) */}
+                  {esDiaDelMes && (
+                    <div className="flex-1 flex flex-col justify-center space-y-1">
+                      <p className="text-base md:text-sm font-black text-slate-900 uppercase tracking-tighter italic leading-none">
+                        {lectura.libro}
+                      </p>
+                      <p className="text-xs md:text-[11px] font-bold text-[#003366] opacity-70">
+                        {LABELS.capitulo} {lectura.capitulo}
+                      </p>
+                    </div>
                   )}
                 </div>
-              )}
-
-              {/* Fila de días */}
-              <div className="grid grid-cols-7 gap-2">
-                {semana.map((dia) => {
-                  const esDiaDelMes = dia.getMonth() === inicio.getMonth();
-                  const esHoy = dia.toDateString() === new Date().toDateString();
-
-                  if (!esDiaDelMes) {
-                    return (
-                      <div
-                        key={dia.toString()}
-                        className="bg-slate-50 rounded-xl min-h-[130px]"
-                      ></div>
-                    );
-                  }
-
-                  const lectura = obtenerLecturaPorFecha(dia);
-
-                  return (
-                    <div
-                      key={dia.toString()}
-                      ref={esHoy ? refDiaHoy : null}
-                      className={`border-2 p-4 rounded-xl flex flex-col justify-between min-h-[130px] transition-all ${
-                        esHoy
-                          ? "bg-teal-50 border-teal-500 shadow-md"
-                          : "bg-white border-slate-200 hover:shadow-md hover:border-slate-300"
-                      }`}
-                    >
-                      <div>
-                        <span className="text-sm font-bold text-slate-600 block">
-                          {format(dia, "d")}
-                        </span>
-                      </div>
-
-                      <div className="text-center">
-                        <p className="text-slate-800 font-bold text-sm">{lectura.libro}</p>
-                        <p className="text-teal-600 font-semibold text-sm">
-                          {LABELS.capitulo} {lectura.capitulo}
-                        </p>
-                      </div>
-
-                      {esHoy && (
-                        <span className="text-xs font-bold text-white px-2 py-1 bg-teal-500 rounded-full text-center">
-                          {LABELS.hoy}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
+
+        {/* ACCIONES FOOTER */}
+        <div className="flex flex-col items-center gap-6 pt-10 border-t border-slate-100">
+          <button className="w-full md:w-auto px-10 py-5 bg-slate-900 text-white rounded-sm font-black text-[10px] uppercase tracking-[0.3em] hover:bg-[#003366] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-3">
+            <Download size={16} />
+            Descargar Guía
+          </button>
+          <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.5em] text-center">
+            Ministerio Juvenil • Cancún
+          </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

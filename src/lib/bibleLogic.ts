@@ -1,4 +1,3 @@
-// Logica de los capitulos que toca en cada fecha
 import { librosBiblicos } from "@/data/plan";
 import { differenceInDays, startOfDay, startOfWeek, endOfWeek, eachDayOfInterval, format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -8,12 +7,10 @@ export function obtenerLecturaPorFecha(fecha: Date) {
     const fechaIniciPlan = startOfDay(new Date(2026, 0, 1));
     const fechaConsulta = startOfDay(fecha);
     const diasTranscurridos = differenceInDays(fechaConsulta, fechaIniciPlan);
-    
-    // El plan comienza en 1 Samuel capítulo 24
+  
     let capituloGlobal = 24 + diasTranscurridos;
     let libroIndex = 0;
 
-    // Iteramos a través de los libros
     while (libroIndex < librosBiblicos.length) {
         const libro = librosBiblicos[libroIndex];
         

@@ -1,0 +1,25 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" 
+}
+
+model Unidad {
+  id            String   @id @default(cuid())
+  nombreGrupo   String   @unique
+  lider         String
+  puntos        Int      @default(0)
+  updatedAt     DateTime @updatedAt
+}
+
+model Usuario {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   
+  nombre    String
+  rol       String   @default("ADMIN") 
+}

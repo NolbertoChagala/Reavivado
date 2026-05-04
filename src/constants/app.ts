@@ -1,7 +1,6 @@
-// Constantes de la aplicación
 export const APP_NAME = "REAVIVADO";
 export const APP_SUBTITLE = "por su palabra";
-export const DAILY_UPDATE_INTERVAL = 60000; // 1 minuto
+export const DAILY_UPDATE_INTERVAL = 60000;
 
 export const LABELS = {
   lecturaParaHoy: "Lectura para hoy",
