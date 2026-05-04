@@ -3,19 +3,13 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { unidadId, cantidad, motivo } = body;
+  const { unidadId, cantidad } = body;
 
   try {
     const resultado = await prisma.unidad.update({
       where: { id: unidadId },
       data: {
         puntos: { increment: cantidad },
-        puntosLog: {
-          create: {
-            cantidad,
-            motivo,
-          },
-        },
       },
     });
 
