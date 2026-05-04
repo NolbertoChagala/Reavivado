@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { APP_NAME } from "@/constants/app";
-import logoAdventista from "@/assets/img/logoadventista.webp"; 
-import LogoJA from "@/assets/img/JA.webp";
+import logoadventista from "@/assets/img/logoadventista.webp"; 
+import JA from "@/assets/img/JA.webp";
 
 export default function Header() {
   return (
@@ -18,7 +18,7 @@ export default function Header() {
           <div className="relative group">
             <div className="absolute -inset-1 bg-slate-100 rounded-full scale-95 group-hover:scale-105 transition-transform duration-300" />
             <Image
-              src={logoAdventista}
+              src={logoadventista}
               alt="Logo Adventista"
               priority
               width={44}
@@ -48,7 +48,7 @@ export default function Header() {
           </div>
           <div className="w-12 h-12 md:w-14 md:h-14 p-1 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center shadow-inner">
             <Image
-              src={LogoJA}
+              src={JA}
               alt="Logo Jóvenes Adventistas"
               width={48}
               height={48}

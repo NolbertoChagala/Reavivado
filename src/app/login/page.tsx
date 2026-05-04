@@ -5,7 +5,7 @@ import { ArrowLeft, Loader2, Lock } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
 import Image from "next/image";
-import logoAdventista from "@/assets/img/logoadventista.webp";
+import logoadventista from "@/assets/img/logoadventista.webp";
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(login, null);
@@ -34,7 +34,7 @@ export default function LoginPage() {
         <div className="flex flex-col items-center space-y-6">
           <div className="relative h-20 w-44 transition-transform duration-500 hover:scale-105">
             <Image 
-              src={logoAdventista} 
+              src={logoadventista} 
               alt="IASD Logo" 
               fill 
               className="object-contain"

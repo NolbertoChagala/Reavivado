@@ -13,8 +13,8 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { logout } from "@/app/actions/auth";
-import logoAdventista from "@/assets/img/logoadventista.webp";
-import LogoJA from "@/assets/img/JA.webp";
+import logoadventista from "@/assets/img/logoadventista.webp";
+import JA from "@/assets/img/JA.webp";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -106,9 +106,9 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
       <main className="flex-1 p-5 md:p-10 space-y-8 overflow-y-auto">
         <header className="flex justify-between items-center bg-white p-5 rounded-xl shadow-sm border border-slate-100">
           <div className="flex items-center gap-4">
-            <Image src={logoAdventista} alt="IASD" width={28} height={28} className="object-contain" priority />
+            <Image src={logoadventista} alt="IASD" width={28} height={28} className="object-contain" priority />
             <div className="h-5 w-[1px] bg-slate-200" />
-            <Image src={LogoJA} alt="JA" width={28} height={28} className="object-contain" priority />
+            <Image src={JA} alt="JA" width={28} height={28} className="object-contain" priority />
           </div>
           
           <div className="text-right hidden sm:block">
