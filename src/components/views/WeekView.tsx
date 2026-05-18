@@ -36,14 +36,11 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-slate-300">
               <Trophy size={16} strokeWidth={3} />
-              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Estadísticas de Unidades</span>
+              <span className="text-[12px] font-black tracking-[0.4em]">Grupos Pequeños</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase italic leading-[0.8] text-white">
               Tabla de Posiciones
             </h1>
-            <p className="text-lg md:text-xl font-light text-slate-200 italic">
-              Villas Otoch 4 • Cancún
-            </p>
           </div>
         </div>
       </div>
@@ -77,7 +74,7 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
                       </h3>
                       <div className="flex items-center gap-2 text-slate-400">
                         <User size={12} strokeWidth={3} />
-                        <span className="text-[10px] font-bold uppercase tracking-widest leading-none">{grupo.lider}</span>
+                        <span className="text-[11px] font-bold tracking-widest leading-none">{grupo.lider}</span>
                       </div>
                     </div>
                   </div>
@@ -102,7 +99,7 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-3">
               <ChevronRight size={20} className="text-[#003366]" />
-              <h3 className="text-xl font-black uppercase tracking-[0.2em] text-slate-900 italic">Análisis de Brecha</h3>
+              <h3 className="text-xl font-black uppercase tracking-[0.2em] text-slate-900 italic">Diferencia de Puntos</h3>
             </div>
             <div className="h-1.5 w-full bg-slate-900" />
           </div>
@@ -121,7 +118,7 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
                     <h4 className="text-xl font-black uppercase italic tracking-tighter text-slate-900 leading-none">
                       {grupo.nombre}
                     </h4>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    <p className="text-[11px] font-bold text-slate-400 tracking-widest">
                       {grupo.posicion === 1 ? "Liderazgo actual" : "Unidad en persecución"}
                     </p>
                   </div>
@@ -130,14 +127,14 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
                 <div className="text-right border-l-2 border-slate-200 pl-8 min-w-[120px]">
                   {grupo.posicion === 1 ? (
                     <div className="flex flex-col items-end">
-                      <span className="text-sm font-black text-[#003366] uppercase italic">Victorioso</span>
+                      <span className="text-[16px] font-black text-[#003366] italic">Victorioso</span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-end">
                       <span className="text-3xl font-black text-[#003366] tabular-nums leading-none">
                         -{grupo.diferencia.toLocaleString()}
                       </span>
-                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter mt-1">Diferencia</p>
+                      <p className="text-[11px] font-black text-slate-400 tracking-tighter mt-1">Diferencia</p>
                     </div>
                   )}
                 </div>

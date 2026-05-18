@@ -25,10 +25,19 @@ export default function DayView({
   }, [unidades]);
 
   const rolMinisterios = [
-    { fecha: "04 May", ministerio: "Jóvenes", encargado: "Directiva JA" },
-    { fecha: "11 May", ministerio: "Mujer", encargado: "Hnas. Villas 4" },
-    { fecha: "18 May", ministerio: "Escuela Sabática", encargado: "Maestros" },
-    { fecha: "25 May", ministerio: "Infantil", encargado: "Líderes" },
+    { fecha: "02 May", ministerio: "Jóvenes", encargado: "Directiva JA" },
+    { fecha: "09 May", ministerio: "Mujer", encargado: "Director de Diaconos" },
+    { fecha: "16 May", ministerio: "No hay culto joven", encargado: "N/A" },
+    {
+      fecha: "23 May",
+      ministerio: "Escuela Sabática",
+      encargado: "Directora de ES",
+    },
+    {
+      fecha: "30 May",
+      ministerio: "Club de Aventureros",
+      encargado: "Directora de Aventureros",
+    },
   ];
 
   const programaHoy = [
@@ -120,7 +129,7 @@ export default function DayView({
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-3">
                 <Trophy size={18} className="text-[#C5A059]" />
-                <h3 className="text-md md:text-lg font-black uppercase tracking-[0.2em] text-slate-900 italic whitespace-nowrap">
+                <h3 className="text-md md:text-lg font-black tracking-[0.2em] uppercase text-slate-900 italic whitespace-nowrap">
                   Ranking Actual
                 </h3>
               </div>
@@ -130,7 +139,7 @@ export default function DayView({
             <div className="bg-slate-50 border-b-4 md:border-b-8 border-slate-900 shadow-sm overflow-hidden">
               <div className="p-6 md:p-8 text-center md:text-left">
                 <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#A68A56] mb-1">
-                  Unidad en Cima
+                  Grupo con mas puntos
                 </p>
                 <h4 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter italic mb-4 leading-none">
                   {unidadLider.nombre}
@@ -139,7 +148,7 @@ export default function DayView({
                   <span className="text-3xl md:text-4xl font-black text-slate-900">
                     {unidadLider.puntos.toLocaleString()}
                   </span>
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">
+                  <p className="text-[12px] font-black text-slate-400 tracking-widest mt-1">
                     Puntos Acumulados
                   </p>
                 </div>
@@ -169,8 +178,8 @@ export default function DayView({
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-3">
                 <Clock size={18} className="text-slate-900" />
-                <h3 className="text-md md:text-lg font-black uppercase tracking-[0.2em] text-slate-900 italic whitespace-nowrap">
-                  Rol de Culto Joven
+                <h3 className="text-md md:text-lg font-black tracking-[0.2em] uppercase text-slate-900 italic whitespace-nowrap">
+                  Programa de Culto Joven
                 </h3>
               </div>
               <div className="h-1 w-full bg-slate-900" />
@@ -186,7 +195,7 @@ export default function DayView({
                     <span className="text-xs font-black text-[#C5A059] tabular-nums w-10 md:w-12 italic leading-none">
                       {p.hora}
                     </span>
-                    <p className="text-sm md:text-md font-black uppercase tracking-tight text-slate-900 italic leading-none">
+                    <p className="text-sm md:text-md font-black tracking-tight text-slate-900 italic leading-none">
                       {p.actividad}
                     </p>
                   </div>
@@ -210,7 +219,7 @@ export default function DayView({
             <div className="flex items-center gap-4">
               <Calendar size={20} className="text-slate-900" />
               <h3 className="text-lg md:text-xl font-black uppercase tracking-[0.2em] text-slate-900 italic text-center">
-                Distribución Semanal
+                Rol de Culto Joven
               </h3>
             </div>
             <div className="h-1 w-32 md:w-48 bg-slate-900" />
@@ -222,13 +231,13 @@ export default function DayView({
                 key={i}
                 className="p-6 md:p-10 border-r border-b border-slate-100 active:bg-slate-900 active:text-white group transition-all duration-300 text-center md:text-left"
               >
-                <p className="text-[9px] font-black text-[#C5A059] mb-4 md:mb-6 tracking-widest uppercase leading-none">
+                <p className="text-[12px] font-black text-[#C5A059] mb-4 md:mb-6 tracking-widest leading-none">
                   {rol.fecha}
                 </p>
-                <h5 className="text-md md:text-lg font-black uppercase tracking-tighter italic leading-none group-active:text-[#C5A059]">
+                <h5 className="text-md md:text-lg font-black tracking-tighter italic leading-none group-active:text-[#C5A059]">
                   {rol.ministerio}
                 </h5>
-                <p className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2 leading-none">
+                <p className="text-[12px] font-bold text-slate-400 tracking-[0.2em] mt-2 leading-none">
                   {rol.encargado}
                 </p>
               </div>

@@ -31,7 +31,7 @@ export default function NavigationBar({
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 px-2 pb-6 pt-2 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+    <nav className="fixed bottom-0 left-0 cursor-pointer right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 px-2 pb-6 pt-2 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
       <div className="max-w-lg mx-auto flex justify-around items-center">
         
         {navItems.map(({ id, label, icon }) => {
