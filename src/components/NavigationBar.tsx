@@ -20,18 +20,18 @@ export default function NavigationBar({
     onChangeVista(id);
     window.scrollTo({
       top: 0,
-      behavior: "instant" 
+      behavior: "smooth" 
     });
   };
 
   const navItems = [
-    { id: "dia" as Vista, label: "Inicio", icon: <Home size={20} /> },
-    { id: "semana" as Vista, label: "Unidades", icon: <Users size={20} /> },
-    { id: "mes" as Vista, label: "Lectura", icon: <Calendar size={20} /> },
+    { id: "dia" as Vista, label: "Inicio", icon: <Home size={18} /> },
+    { id: "semana" as Vista, label: "Unidades", icon: <Users size={18} /> },
+    { id: "mes" as Vista, label: "Calendario", icon: <Calendar size={18} /> },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 cursor-pointer right-0 bg-white/90 backdrop-blur-md border-t border-slate-100 px-2 pb-6 pt-2 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+    <nav className="fixed bottom-0 left-0 right-0 cursor-pointer bg-white/90 dark:bg-[#111827]/90 backdrop-blur-md border-t border-slate-100 dark:border-slate-800/80 px-2 pb-4 pt-2.5 z-50 select-none">
       <div className="max-w-lg mx-auto flex justify-around items-center">
         
         {navItems.map(({ id, label, icon }) => {
@@ -41,43 +41,35 @@ export default function NavigationBar({
             <button
               key={id}
               onClick={() => handleCambioVista(id)} 
-              className={`flex flex-col items-center gap-1 group transition-all duration-300 min-w-[64px] ${
-                isActive ? "text-[#003366]" : "text-slate-400"
+              className={`flex flex-col items-center gap-1 group btn-transition min-w-[60px] ${
+                isActive 
+                  ? "text-brand-primary" 
+                  : "text-slate-400 dark:text-slate-500"
               }`}
             >
-              <div className={`transition-all duration-300 p-2.5 rounded-xl ${
-                isActive 
-                  ? "bg-[#003366] text-white shadow-lg shadow-blue-900/20 scale-110" 
-                  : "bg-transparent active:scale-90"
-              }`}>
+              <div className="p-1">
                 {icon}
               </div>
-              <span className={`text-[10px] font-black uppercase tracking-tighter ${
-                isActive ? "opacity-100" : "opacity-40"
-              }`}>
+              <span className="text-[9px] font-medium tracking-wide">
                 {label}
               </span>
             </button>
           );
         })}
 
-        {/* BOTÓN DE PANEL */}
+        {/* BOTÓN DE PANEL ADMIN */}
         <button
           onClick={() => router.push('/admin/puntos')}
-          className={`flex flex-col items-center gap-1 group transition-all duration-300 min-w-[64px] ${
-            pathname.includes('/admin') ? "text-[#003366]" : "text-slate-400"
+          className={`flex flex-col items-center gap-1 group btn-transition min-w-[60px] ${
+            pathname.includes('/admin') 
+              ? "text-brand-primary" 
+              : "text-slate-400 dark:text-slate-500"
           }`}
         >
-          <div className={`transition-all duration-300 p-2.5 rounded-xl ${
-            pathname.includes('/admin') 
-              ? "bg-[#003366] text-white shadow-lg shadow-blue-900/20 scale-110" 
-              : "bg-transparent active:scale-90"
-          }`}>
-            <Settings size={20} />
+          <div className="p-1">
+            <Settings size={18} />
           </div>
-          <span className={`text-[10px] font-black uppercase tracking-tighter ${
-            pathname.includes('/admin') ? "opacity-100" : "opacity-40"
-          }`}>
+          <span className="text-[9px] font-medium tracking-wide">
             Panel
           </span>
         </button>
@@ -86,3 +78,4 @@ export default function NavigationBar({
     </nav>
   );
 }
+

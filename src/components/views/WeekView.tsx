@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Trophy, User, ChevronRight, Activity } from "lucide-react";
-import { RefObject } from "react";
+import { Trophy, User, Activity, AlertCircle, Compass } from "lucide-react";
 
 interface Unidad {
   nombre: string;
@@ -14,7 +13,7 @@ export interface WeekViewProps {
   unidades: Unidad[]; 
   hoy?: Date;
   semana?: any[];
-  refDiaActual?: RefObject<HTMLDivElement | null>;
+  refDiaActual?: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function WeekView({ unidades = [] }: WeekViewProps) {
@@ -23,134 +22,156 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
     return ordenados.map((grupo, index) => {
       const diferencia =
         index === 0 ? 0 : ordenados[index - 1].puntos - grupo.puntos;
-      return { ...grupo, diferencia, posicion: index + 1 };
+      const diferenciaLider = 
+        index === 0 ? 0 : ordenados[0].puntos - grupo.puntos;
+      return { ...grupo, diferencia, diferenciaLider, posicion: index + 1 };
     });
   }, [unidades]);
 
   return (
-    <div className="w-full min-h-screen bg-white font-sans text-slate-900">
+    <div className="space-y-8 w-full">
       
-      {/* HEADER */}
-      <div className="w-full border-b-[8px] md:border-b-[12px] border-slate-900 py-12 md:py-20 bg-[#003366] px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-slate-300">
-              <Trophy size={16} strokeWidth={3} />
-              <span className="text-[12px] font-black tracking-[0.4em]">Grupos Pequeños</span>
-            </div>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase italic leading-[0.8] text-white">
-              Tabla de Posiciones
-            </h1>
+      {/* Resumen del Liderazgo */}
+      <div className="p-6 bg-white border border-slate-200/60 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5 text-brand-primary">
+            <Trophy size={14} />
+            <span className="text-[10px] font-bold uppercase tracking-widest">
+              Estado de Unidades
+            </span>
           </div>
+          <h2 className="text-xl font-bold tracking-tight">
+            Tabla General de Puntos
+          </h2>
+          <p className="text-xs text-slate-400">
+            Puntuación acumulada de las unidades en base al cumplimiento de lecturas y participación.
+          </p>
         </div>
+
+        {gruposProcesados.length > 0 && (
+          <div className="flex items-center gap-3 bg-brand-primary text-white px-4 py-3 rounded-xl shrink-0 shadow-sm shadow-red-500/10">
+            <Trophy className="text-white shrink-0" size={20} />
+            <div>
+              <span className="block text-[8px] font-bold text-red-200 uppercase tracking-wider leading-none">Líder Actual</span>
+              <span className="text-sm font-black leading-none mt-1.5 block">
+                {gruposProcesados[0].nombre}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
-      <main className="max-w-5xl mx-auto px-6 py-16 space-y-20">
+      {/* Grid del Dashboard (2 Columnas en desktop) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         
-        {/* SECCIÓN 1: DESEMPEÑO GENERAL */}
-        <div className="space-y-8">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-3">
-              <Activity size={20} className="text-[#003366]" />
-              <h2 className="text-xl font-black uppercase tracking-[0.2em] text-slate-900 italic">Desempeño General</h2>
-            </div>
-            <div className="h-1.5 w-full bg-slate-900" />
+        {/* COLUMNA 1: DESEMPEÑO GENERAL */}
+        <div className="bg-white border border-slate-200/60 border-t-4 border-t-brand-primary rounded-2xl shadow-sm overflow-hidden">
+          <div className="p-5 border-b border-slate-100 flex items-center gap-2">
+            <Activity size={18} className="text-slate-500" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+              Clasificación General
+            </h3>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
+          <div className="divide-y divide-slate-100">
             {gruposProcesados.length > 0 ? (
               gruposProcesados.map((grupo) => (
                 <div
                   key={grupo.nombre}
-                  className="flex items-center justify-between p-6 border border-slate-100 bg-slate-50/50 rounded-sm active:bg-slate-100 transition-colors"
+                  className="flex items-center justify-between p-5 hover:bg-slate-50/40 btn-transition"
                 >
-                  <div className="flex items-center gap-6">
-                    <span className={`text-3xl font-black italic tabular-nums w-8 ${grupo.posicion === 1 ? "text-[#003366]" : "text-slate-200"}`}>
+                  <div className="flex items-center gap-4">
+                    {/* Badge de Posición */}
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 border ${
+                      grupo.posicion === 1
+                        ? "bg-red-50 text-brand-primary border-red-100"
+                        : grupo.posicion === 2
+                        ? "bg-slate-50 text-slate-600 border-slate-100"
+                        : "bg-white text-slate-400 border-slate-100"
+                    }`}>
                       {grupo.posicion}
-                    </span>
-                    <div className="space-y-1">
-                      <h3 className="text-xl font-black text-slate-900 uppercase tracking-tighter italic leading-none">
+                    </div>
+
+                    <div className="space-y-0.5">
+                      <h4 className="text-sm font-bold text-slate-900">
                         {grupo.nombre}
-                      </h3>
-                      <div className="flex items-center gap-2 text-slate-400">
-                        <User size={12} strokeWidth={3} />
-                        <span className="text-[11px] font-bold tracking-widest leading-none">{grupo.lider}</span>
+                      </h4>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                        <User size={10} />
+                        <span>Líder: {grupo.lider}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right border-l-2 border-slate-200 pl-8">
-                    <span className="text-3xl font-black text-slate-900 tabular-nums leading-none">
+
+                  <div className="text-right">
+                    <span className="text-base font-extrabold text-slate-900 tabular-nums leading-none">
                       {grupo.puntos.toLocaleString()}
                     </span>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Pts</p>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide block mt-0.5">Puntos</span>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="p-12 text-center border border-slate-100 italic text-slate-300 uppercase font-black tracking-widest">
-                Sin datos registrados
+              <div className="p-12 text-center text-xs text-slate-400 italic">
+                Sin datos de unidades registrados
               </div>
             )}
           </div>
         </div>
 
-        {/* SECCIÓN 2: ANÁLISIS DE BRECHA (Ahora con el mismo diseño de tarjetas) */}
-        <div className="space-y-8">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-3">
-              <ChevronRight size={20} className="text-[#003366]" />
-              <h3 className="text-xl font-black uppercase tracking-[0.2em] text-slate-900 italic">Diferencia de Puntos</h3>
-            </div>
-            <div className="h-1.5 w-full bg-slate-900" />
+        {/* COLUMNA 2: DIFERENCIA DE PUNTOS */}
+        <div className="bg-white border border-slate-200/60 border-t-4 border-t-brand-gold rounded-2xl shadow-sm overflow-hidden">
+          <div className="p-5 border-b border-slate-100 flex items-center gap-2">
+            <Compass size={18} className="text-slate-500" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+              Análisis de Brecha (Diferencia)
+            </h3>
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
-            {gruposProcesados.map((grupo) => (
-              <div
-                key={`brecha-${grupo.nombre}`}
-                className="flex items-center justify-between p-6 border border-slate-100 bg-white rounded-sm active:bg-slate-50 transition-colors"
-              >
-                <div className="flex items-center gap-6">
-                  <div className={`w-12 h-12 flex-shrink-0 flex items-center justify-center font-black italic text-lg ${grupo.posicion === 1 ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-400"}`}>
-                    #{grupo.posicion}
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="text-xl font-black uppercase italic tracking-tighter text-slate-900 leading-none">
+          <div className="divide-y divide-slate-100">
+            {gruposProcesados.length > 0 ? (
+              gruposProcesados.map((grupo) => (
+                <div
+                  key={`brecha-${grupo.nombre}`}
+                  className="flex items-center justify-between p-5 hover:bg-slate-50/40 btn-transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-slate-400 w-8">
+                      #{grupo.posicion}
+                    </span>
+                    <span className="text-sm font-semibold text-slate-800">
                       {grupo.nombre}
-                    </h4>
-                    <p className="text-[11px] font-bold text-slate-400 tracking-widest">
-                      {grupo.posicion === 1 ? "Liderazgo actual" : "Unidad en persecución"}
-                    </p>
+                    </span>
+                  </div>
+
+                  <div className="text-right">
+                    {grupo.posicion === 1 ? (
+                      <span className="text-[10px] bg-red-50 text-brand-primary border border-red-100 font-bold px-2 py-0.5 rounded">
+                        Líder del Tablero
+                      </span>
+                    ) : (
+                      <div className="flex flex-col items-end">
+                        <span className="text-sm font-bold text-red-500 tabular-nums">
+                          -{grupo.diferenciaLider.toLocaleString()}
+                        </span>
+                        <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-tighter mt-0.5">
+                          Para alcanzar al líder
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
-
-                <div className="text-right border-l-2 border-slate-200 pl-8 min-w-[120px]">
-                  {grupo.posicion === 1 ? (
-                    <div className="flex flex-col items-end">
-                      <span className="text-[16px] font-black text-[#003366] italic">Victorioso</span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-end">
-                      <span className="text-3xl font-black text-[#003366] tabular-nums leading-none">
-                        -{grupo.diferencia.toLocaleString()}
-                      </span>
-                      <p className="text-[11px] font-black text-slate-400 tracking-tighter mt-1">Diferencia</p>
-                    </div>
-                  )}
-                </div>
+              ))
+            ) : (
+              <div className="p-12 text-center text-xs text-slate-400 italic">
+                Sin datos disponibles
               </div>
-            ))}
+            )}
           </div>
         </div>
-      </main>
 
-      {/* FOOTER */}
-      <footer className="w-full py-16 bg-slate-900 flex flex-col items-center gap-6 text-center px-6">
-        <div className="h-1 w-12 bg-white/10" />
-        <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.8em]">
-          Ministerio Juvenil • Villas Otoch 4
-        </p>
-      </footer>
+      </div>
+
     </div>
   );
 }
