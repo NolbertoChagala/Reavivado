@@ -160,7 +160,7 @@ export default function AppLayout({
         </header>
 
         {/* CONTENEDOR ANCHO COMPLETAMENTE OPTIMIZADO */}
-        <main className="flex-1 overflow-x-hidden p-6 md:p-10 w-full max-w-[1400px] mx-auto pb-24 md:pb-12 animate-in fade-in duration-300">
+        <main className="flex-1 overflow-x-hidden p-4 md:p-10 w-full max-w-[1400px] mx-auto pb-24 md:pb-12 animate-in fade-in duration-300">
           {children}
         </main>
       </div>
