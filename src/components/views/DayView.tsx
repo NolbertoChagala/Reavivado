@@ -85,7 +85,7 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
         </div>
       </div>
 
-      {/* 2. GRID DE INDICADORES / MÉTRICAS CLAVE (3 Columnas) */}
+      {/* 2. GRID DE INDICADORES / MÉTRICAS CLAVE */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {/* Tarjeta 1: Lectura de Hoy */}
@@ -165,10 +165,10 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
 
       </div>
 
-      {/* 3. PANEL DIVIDIDO DE DETALLES (12 Columnas en Desktop) */}
+      {/* 3. PANEL DIVIDIDO DE DETALLES */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-        {/* ================= TARJETA DE HORARIO & TOLERANCIA - SÓLO MÓVIL ================= */}
+        {/* TARJETA DE HORARIO & TOLERANCIA - SÓLO MÓVIL */}
         <div className="block lg:hidden order-1 p-5 bg-white border border-slate-200/60 border-t-4 border-t-amber-500 rounded-2xl shadow-sm space-y-4">
           <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
             <Clock size={16} className="text-amber-500" />
@@ -186,7 +186,7 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
           </div>
         </div>
 
-        {/* ================= COLUMNA PRINCIPAL (Itinerario del Culto - col-span-8) ================= */}
+        {/* COLUMNA PRINCIPAL (Itinerario del Culto)*/}
         <div className="order-2 lg:order-1 lg:col-span-8 bg-white border border-slate-200/60 rounded-2xl shadow-sm overflow-hidden p-4 md:p-6">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div className="flex items-center gap-2">
@@ -237,7 +237,7 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
           </div>
         </div>
 
-        {/* ================= TARJETA DE UBICACIÓN - SÓLO MÓVIL ================= */}
+        {/* TARJETA DE UBICACIÓN - SÓLO MÓVIL */}
         <div className="block lg:hidden order-3 p-5 bg-white border border-slate-200/60 rounded-2xl shadow-sm space-y-4">
           <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
             <MapPin size={16} className="text-brand-primary" />
@@ -266,7 +266,7 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
           </div>
         </div>
 
-        {/* ================= COLUMNA LATERAL (SÓLO ESCRITORIO - col-span-4) ================= */}
+        {/* COLUMNA LATERAL (SÓLO ESCRITORIO) */}
         <div className="hidden lg:flex flex-col gap-6 lg:col-span-4 lg:order-2">
 
           {/* Tarjeta de Horario & Tolerancia */}
