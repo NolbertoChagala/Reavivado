@@ -27,6 +27,8 @@ import {
   BookOpen,
 } from "lucide-react";
 import { LABELS } from "@/constants/app";
+import logoadventista from "@/assets/img/logoadventista.webp";
+import JA from "@/assets/img/JA.webp";
 
 interface CalendarioMensualProps {
   fecha: Date;
@@ -87,6 +89,39 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
   }, [diaSeleccionado]);
 
   const esSabadoDiaSeleccionado = getDay(diaSeleccionado) === 6;
+
+  const [descargando, setDescargando] = useState(false);
+
+  const handleDescargarImagen = async () => {
+    if (descargando) return;
+    setDescargando(true);
+    try {
+      const { toPng } = await import("html-to-image");
+      const node = document.getElementById("calendario-flyer-descargable");
+      if (!node) {
+        console.error("No se encontró el elemento para descargar");
+        setDescargando(false);
+        return;
+      }
+
+      const dataUrl = await toPng(node, {
+        cacheBust: true,
+        backgroundColor: "#ffffff",
+        pixelRatio: 2, // Imagen Retina nítida para compartir e imprimir
+      });
+
+      const link = document.createElement("a");
+      const nombreMes = format(fechaFoco, "MMMM_yyyy", { locale: es });
+      link.download = `Cronograma_Lecturas_${nombreMes}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error("Error al exportar calendario como imagen:", error);
+      alert("Hubo un error al generar la imagen. Intenta de nuevo.");
+    } finally {
+      setDescargando(false);
+    }
+  };
 
   return (
     <div className="space-y-6 w-full animate-in fade-in duration-300">
@@ -158,7 +193,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
         </div>
       </div>
 
-      {/* ================= CONTENIDO DE VISTAS ================= */}
+      {/* CONTENIDO DE VISTAS */}
 
       {tipoVista === "mes" ? (
         /* VISTA MENSUAL */
@@ -205,7 +240,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
                       {/* Marcador de Sábado */}
                       {esSabado && esDiaDelMes && (
                         <span className="text-[8px] bg-amber-50 text-brand-gold border border-amber-200/60 font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider shadow-sm">
-                          Culto JA
+                          Conexión Bíblica
                         </span>
                       )}
                     </div>
@@ -288,7 +323,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
                 </span>
                 {esSabadoDiaSeleccionado && (
                   <span className="text-[8px] bg-amber-50 text-brand-gold border border-amber-200/60 font-black px-2 py-0.5 rounded uppercase tracking-wider">
-                    Programa JA
+                    Conexión Bíblica
                   </span>
                 )}
               </div>
@@ -307,7 +342,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
 
               {esSabadoDiaSeleccionado && (
                 <div className="p-3 bg-amber-50/40 border border-amber-100/50 rounded-xl space-y-1">
-                  <span className="block text-[9px] font-bold text-brand-gold uppercase tracking-wider">Culto e Itinerario</span>
+                  <span className="block text-[9px] font-bold text-brand-gold uppercase tracking-wider">Conexión Bíblica e Itinerario</span>
                   <p className="text-xs text-slate-600 leading-relaxed font-medium">
                     Reunión oficial a las 17:00 hrs. Preludio musical a las 17:10 hrs con los directores.
                   </p>
@@ -348,7 +383,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
 
                     {esSabado && (
                       <span className="text-[8px] bg-amber-50 text-brand-gold border border-amber-200/60 font-black px-1.5 py-0.5 rounded uppercase tracking-wider">
-                        JA
+                        Conexión Bíblica
                       </span>
                     )}
                   </div>
@@ -380,10 +415,124 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
           <Info size={14} />
           <span>Haz clic en "DESCARGAR GUÍA DE LECTURA" si deseas tener el calendario mensual en imagen.</span>
         </div>
-        <button className="w-full sm:w-auto px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-slate-55 btn-transition active:scale-95 flex items-center justify-center gap-2 shadow-sm">
+        <button
+          onClick={handleDescargarImagen}
+          disabled={descargando}
+          className="w-full sm:w-auto px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-slate-55 btn-transition active:scale-95 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           <Download size={14} />
-          Descargar Guía de Lectura
+          {descargando ? "Generando Imagen..." : "Descargar Guía de Lectura"}
         </button>
+      </div>
+
+      {/* Plantilla Oculta para Exportación (Alta Resolución) */}
+      <div
+        style={{ position: "absolute", top: "-9999px", left: "-9999px", width: "1050px" }}
+        aria-hidden="true"
+      >
+        <div
+          id="calendario-flyer-descargable"
+          className="w-[1024px] bg-white p-8 space-y-6 flex flex-col border border-slate-100"
+        >
+          {/* Cabecera del Flyer con Logos Oficiales */}
+          <div className="bg-slate-800 p-8 rounded-3xl text-white flex justify-between items-center shadow-md gap-4">
+            
+            {/* Lado Izquierdo: Logo Iglesia + Títulos */}
+            <div className="flex items-center gap-4">
+              <img
+                src={logoadventista.src}
+                alt="Iglesia Adventista"
+                className="w-16 h-16 object-contain shrink-0"
+              />
+              <div className="flex flex-col justify-center">
+                <h1 className="text-xl font-black tracking-wider uppercase leading-none">
+                  Reavivados por su Palabra
+                </h1>
+                <p className="text-xs text-slate-300 uppercase tracking-widest mt-2 font-bold leading-none">
+                  Villas Otoch 4
+                </p>
+              </div>
+            </div>
+
+            {/* Lado Derecho: Mes de Estudio + Logo JA */}
+            <div className="flex items-center gap-4 text-right">
+              <div className="flex flex-col justify-center">
+                <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block leading-none">
+                  Plan de Lectura
+                </span>
+                <span className="text-xl font-black uppercase capitalize mt-2 block leading-none">
+                  {format(fechaFoco, "MMMM yyyy", { locale: es })}
+                </span>
+              </div>
+              <img
+                src={JA.src}
+                alt="JA"
+                className="w-16 h-16 object-contain shrink-0"
+              />
+            </div>
+          </div>
+
+          {/* Cuadrícula Completa de 7 Columnas Desktop */}
+          <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+            <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-50">
+              {["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"].map((diaNombre) => (
+                <div key={diaNombre} className="py-4 text-xs font-black uppercase tracking-widest text-slate-500 text-center">
+                  {diaNombre}
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-7 gap-px bg-slate-200">
+              {diasMes.map((dia) => {
+                const esDiaDelMes = isSameMonth(dia, inicioMes);
+                const lectura = obtenerLecturaPorFecha(dia);
+
+                return (
+                  <div
+                    key={dia.toString()}
+                    className={`
+                      relative flex flex-col p-3 min-h-[145px] text-center bg-white justify-center items-center border border-slate-50
+                      ${esDiaDelMes ? "" : "bg-slate-50/40 opacity-30"}
+                    `}
+                  >
+                    {esDiaDelMes ? (
+                      <div className="flex flex-col items-center justify-center space-y-2 w-full">
+                        {/* Número del Día */}
+                        <span className="text-2xl font-black text-slate-900 tabular-nums leading-none">
+                          {format(dia, "d")}
+                        </span>
+                        
+                        {/* Divisor Corto y Elegante */}
+                        <div className="w-8 h-0.5 bg-brand-primary/20 rounded" />
+
+                        {/* Libro y Capítulo */}
+                        <div className="w-full px-1 min-w-0">
+                          <span className="text-sm font-extrabold text-slate-800 block truncate uppercase tracking-tight">
+                            {lectura.libro}
+                          </span>
+                          <span className="text-xs text-slate-500 font-semibold block mt-1 leading-none">
+                            {LABELS.capitulo} {lectura.capitulo}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Día fuera de mes: solo número tenue */
+                      <span className="text-sm font-bold text-slate-300 tabular-nums">
+                        {format(dia, "d")}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Pie de Página del Flyer */}
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100 text-[10px] text-slate-400 font-medium">
+            <span>Generado digitalmente por la aplicación Reavivado • Conexión Bíblica 2026</span>
+            <span className="uppercase tracking-wider">Iglesia Adventista del Séptimo Día</span>
+          </div>
+        </div>
       </div>
 
     </div>
