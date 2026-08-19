@@ -413,7 +413,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100">
         <div className="flex items-center gap-2 text-xs text-slate-400">
           <Info size={14} />
-          <span>Haz clic en "DESCARGAR GUÍA DE LECTURA" si deseas tener el calendario mensual en imagen.</span>
+          <span>Haz clic en "DESCARGAR CALENDARIO DEL MES" si deseas tener el calendario mensual en imagen.</span>
         </div>
         <button
           onClick={handleDescargarImagen}
@@ -421,7 +421,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
           className="w-full sm:w-auto px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-slate-55 btn-transition active:scale-95 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Download size={14} />
-          {descargando ? "Generando Imagen..." : "Descargar Guía de Lectura"}
+          {descargando ? "Generando Imagen..." : "Descargar Calendario del Mes"}
         </button>
       </div>
 
@@ -436,7 +436,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
         >
           {/* Cabecera del Flyer con Logos Oficiales */}
           <div className="bg-slate-800 p-8 rounded-3xl text-white flex justify-between items-center shadow-md gap-4">
-            
+
             {/* Lado Izquierdo: Logo Iglesia + Títulos */}
             <div className="flex items-center gap-4">
               <img
@@ -501,7 +501,7 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
                         <span className="text-2xl font-black text-slate-900 tabular-nums leading-none">
                           {format(dia, "d")}
                         </span>
-                        
+
                         {/* Divisor Corto y Elegante */}
                         <div className="w-8 h-0.5 bg-brand-primary/20 rounded" />
 
