@@ -115,7 +115,14 @@ export default function AppLayout({
                 Herramientas
               </span>
               <button
-                onClick={() => router.push("/admin/puntos")}
+                onClick={() => {
+                  const isLoggedIn = typeof window !== "undefined" && document.cookie.includes("is_logged_in=true");
+                  if (isLoggedIn) {
+                    router.push("/admin/puntos");
+                  } else {
+                    router.push("/login");
+                  }
+                }}
                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium btn-transition ${
                   pathname.includes("/admin")
                     ? "bg-red-50/50 text-brand-primary border-l-4 border-brand-gold font-semibold shadow-sm"

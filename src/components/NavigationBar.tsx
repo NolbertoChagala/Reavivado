@@ -59,7 +59,14 @@ export default function NavigationBar({
 
         {/* BOTÓN DE PANEL ADMIN */}
         <button
-          onClick={() => router.push('/admin/puntos')}
+          onClick={() => {
+            const isLoggedIn = typeof window !== "undefined" && document.cookie.includes("is_logged_in=true");
+            if (isLoggedIn) {
+              router.push('/admin/puntos');
+            } else {
+              router.push('/login');
+            }
+          }}
           className={`flex flex-col items-center gap-1 group btn-transition min-w-[60px] ${
             pathname.includes('/admin') 
               ? "text-brand-primary" 

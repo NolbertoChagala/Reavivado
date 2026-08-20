@@ -36,6 +36,13 @@ export async function login(prevState: any, formData: FormData) {
     path: "/",
   });
 
+  cookieStore.set("is_logged_in", "true", {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
+
   redirect("/admin/puntos");
 }
 
@@ -43,5 +50,6 @@ export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete("session_user");
   cookieStore.delete("user_role");
+  cookieStore.delete("is_logged_in");
   redirect("/");
 }
