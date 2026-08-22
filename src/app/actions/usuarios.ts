@@ -29,3 +29,16 @@ export async function crearUsuario(prevState: any, formData: FormData) {
     return { success: false, message: "Error: El correo ya existe." , error };
   }
 }
+
+export async function eliminarUsuario(usuarioId: string) {
+  try {
+    await prisma.usuario.delete({
+      where: { id: usuarioId }
+    });
+    revalidatePath("/admin/usuarios");
+    return { success: true, message: "Cuenta de acceso eliminada correctamente." };
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    return { success: false, message: "Error al intentar revocar la cuenta." };
+  }
+}

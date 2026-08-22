@@ -2,78 +2,87 @@
 
 import { useActionState } from "react";
 import { crearUsuario } from "@/app/actions/usuarios";
-import { UserPlus, Shield } from "lucide-react";
+import { UserPlus, Shield, User, Mail, Lock } from "lucide-react";
 
 export default function FormularioUsuario() {
   const [state, formAction, isPending] = useActionState(crearUsuario, null);
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-5">
       <div className="space-y-4">
         {/* INPUT: NOMBRE */}
-        <div className="space-y-1 group">
-          <label className="text-[9px] font-bold uppercase text-slate-400 ml-1 tracking-widest group-focus-within:text-blue-500 transition-colors">
-            Nombre del Administrador
+        <div className="space-y-1.5 group">
+          <label className="text-[9px] font-bold text-slate-400 ml-1 group-focus-within:text-slate-900 transition-colors">
+            Nombre del administrador
           </label>
-          <input
-            name="nombre"
-            type="text"
-            placeholder="Ej: Nolberto Chagala"
-            className="w-full py-3 px-1 border-b border-slate-200 focus:border-slate-900 outline-none text-sm font-semibold text-slate-800 transition-all bg-transparent placeholder:text-slate-300"
-            required
-          />
+          <div className="relative flex items-center">
+            <User size={14} className="absolute left-3.5 text-slate-400 group-focus-within:text-slate-900 transition-colors" />
+            <input
+              name="nombre"
+              type="text"
+              placeholder="Ej: Nolberto Chagala"
+              className="w-full py-3.5 pl-10 pr-4 border border-slate-200/80 focus:border-brand-gold/60 focus:ring-0 focus:outline-none outline-none text-xs font-semibold text-slate-800 transition-all bg-transparent rounded-2xl placeholder:text-slate-350"
+              required
+            />
+          </div>
         </div>
 
         {/* INPUT: EMAIL */}
-        <div className="space-y-1 group">
-          <label className="text-[9px] font-bold uppercase text-slate-400 ml-1 tracking-widest group-focus-within:text-blue-500 transition-colors">
-            Correo Electrónico
+        <div className="space-y-1.5 group">
+          <label className="text-[9px] font-bold text-slate-400 ml-1 group-focus-within:text-slate-900 transition-colors">
+            Correo electrónico
           </label>
-          <input
-            name="email"
-            type="email"
-            placeholder="admin@ejemplo.com"
-            className="w-full py-3 px-1 border-b border-slate-200 focus:border-slate-900 outline-none text-sm font-semibold text-slate-800 transition-all bg-transparent placeholder:text-slate-300"
-            required
-          />
+          <div className="relative flex items-center">
+            <Mail size={14} className="absolute left-3.5 text-slate-400 group-focus-within:text-slate-900 transition-colors" />
+            <input
+              name="email"
+              type="email"
+              placeholder="admin@ejemplo.com"
+              className="w-full py-3.5 pl-10 pr-4 border border-slate-200/80 focus:border-brand-gold/60 focus:ring-0 focus:outline-none outline-none text-xs font-semibold text-slate-800 transition-all bg-transparent rounded-2xl placeholder:text-slate-350"
+              required
+            />
+          </div>
         </div>
 
         {/* INPUT: PASSWORD */}
-        <div className="space-y-1 group">
-          <label className="text-[9px] font-bold uppercase text-slate-400 ml-1 tracking-widest group-focus-within:text-blue-500 transition-colors">
-            Contraseña de Acceso
+        <div className="space-y-1.5 group">
+          <label className="text-[9px] font-bold text-slate-400 ml-1 group-focus-within:text-slate-900 transition-colors">
+            Contraseña de acceso
           </label>
-          <input
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            className="w-full py-3 px-1 border-b border-slate-200 focus:border-slate-900 outline-none text-sm font-semibold text-slate-800 transition-all bg-transparent placeholder:text-slate-300"
-            required
-          />
+          <div className="relative flex items-center">
+            <Lock size={14} className="absolute left-3.5 text-slate-400 group-focus-within:text-slate-900 transition-colors" />
+            <input
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              className="w-full py-3.5 pl-10 pr-4 border border-slate-200/80 focus:border-brand-gold/60 focus:ring-0 focus:outline-none outline-none text-xs font-semibold text-slate-800 transition-all bg-transparent rounded-2xl placeholder:text-slate-350"
+              required
+            />
+          </div>
         </div>
 
         {/* SELECT: ROL (FIJO COMO ADMINISTRADOR) */}
-        <div className="space-y-1 opacity-60">
-          <label className="text-[9px] font-bold uppercase text-slate-400 ml-1 tracking-widest">
-            Privilegios del Sistema
+        <div className="space-y-1.5 opacity-60 group">
+          <label className="text-[9px] font-bold text-slate-400 ml-1">
+            Privilegios del sistema
           </label>
-          <div className="relative">
+          <div className="relative flex items-center">
+            <Shield size={14} className="absolute left-3.5 text-slate-400" />
             <select
               name="rol"
-              className="w-full py-3 px-1 border-b border-slate-200 bg-transparent outline-none text-xs font-black text-slate-900 uppercase tracking-tighter appearance-none cursor-not-allowed"
+              className="w-full py-3.5 pl-10 pr-4 border border-slate-200 bg-transparent outline-none focus:outline-none focus:ring-0 text-xs font-bold text-slate-900 appearance-none cursor-not-allowed rounded-2xl"
               defaultValue="ADMIN"
             >
-              <option value="ADMIN">Nivel: Administrador Total</option>
+              <option value="ADMIN">Nivel: Administrador total</option>
             </select>
-            <Shield size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-blue-500" />
           </div>
         </div>
       </div>
 
       {/* MENSAJES DE ESTADO */}
       {state?.message && (
-        <div className={`p-3 rounded-xl text-[10px] font-bold uppercase tracking-widest text-center ${
-          state.success ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"
+        <div className={`p-3.5 rounded-xl text-[10px] font-bold text-center ${
+          state.success ? "bg-green-50 text-green-700 border border-green-200/50" : "bg-red-50 text-red-655 border border-red-200/50"
         }`}>
           {state.message}
         </div>
@@ -83,10 +92,10 @@ export default function FormularioUsuario() {
       <button
         type="submit"
         disabled={isPending}
-        className="flex items-center justify-center gap-3 w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-600 transition-all disabled:bg-slate-200 disabled:text-slate-400 shadow-lg shadow-slate-100"
+        className="flex items-center justify-center gap-2.5 w-full bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-0 disabled:bg-slate-100 disabled:text-slate-400 text-white py-4 rounded-2xl font-bold text-[10px] transition-all cursor-pointer shadow-md disabled:cursor-not-allowed mt-2"
       >
-        <UserPlus size={14} />
-        {isPending ? "Procesando..." : "Autorizar nuevo acceso"}
+        <UserPlus size={14} className="text-brand-gold shrink-0" />
+        <span>{isPending ? "Procesando..." : "Autorizar nuevo acceso"}</span>
       </button>
     </form>
   );
