@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 export async function registrarPuntaje(prevState: any, formData: FormData) {
   const unidadId = formData.get("unidadId") as string;
   const cantidadStr = formData.get("cantidad") as string;
-  const tipoOperacion = formData.get("tipoOperacion") as string; // "sumar" o "fijar"
+  const tipoOperacion = formData.get("tipoOperacion") as string;
 
   const cantidad = parseInt(cantidadStr);
 
@@ -15,13 +15,11 @@ export async function registrarPuntaje(prevState: any, formData: FormData) {
 
   try {
     if (tipoOperacion === "fijar") {
-      // SOBRESCRIBE EL TOTAL DIRECTAMENTE (EDICIÓN EXACTA)
       await prisma.unidad.update({
         where: { id: unidadId },
         data: { puntos: cantidad }
       });
     } else {
-      // SUMA O RESTA AL TOTAL (OPERACIÓN INCREMENTAL)
       await prisma.unidad.update({
         where: { id: unidadId },
         data: { puntos: { increment: cantidad } }
