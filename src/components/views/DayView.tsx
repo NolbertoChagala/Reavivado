@@ -23,6 +23,7 @@ interface DayViewProps {
 }
 
 export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps) {
+  // Obtener el líder de unidades
   const liderPuntos = useMemo(() => {
     if (unidades.length === 0) return { nombre: "Sin Datos", puntos: 0, lider: "---" };
     return [...unidades].sort((a, b) => b.puntos - a.puntos)[0];
@@ -43,7 +44,7 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
 
   const getIconForActividad = (actividad: string) => {
     const act = actividad.toLowerCase();
-    if (act.includes("canto")) return <Music size={14} className="text-brand-primary" />;
+    if (act.includes("canto")) return <Music size={14} className="text-brand-primary animate-pulse" />;
     if (act.includes("bienvenida")) return <Heart size={14} className="text-red-500" />;
     if (act.includes("ideales")) return <Compass size={14} className="text-amber-500" />;
     if (act.includes("lectura")) return <BookOpen size={14} className="text-brand-primary" />;
@@ -58,261 +59,213 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
   const saludoDia = format(hoy, "EEEE", { locale: es });
 
   return (
-    <div className="space-y-8 w-full">
-
-      {/* 1. CABECERA CON BIENVENIDA Y FECHA EXTENDIDA */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 md:p-6 bg-white border border-slate-200/60 rounded-2xl shadow-sm">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-1.5 text-brand-primary">
-            <MapPin size={14} />
-            <span className="text-[10px] font-bold uppercase tracking-widest">
-              Sede Cancún • Villas Otoch 4
-            </span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 capitalize">
-            ¡Feliz {saludoDia}!
-          </h2>
-          <p className="text-xs text-slate-400">
-            Hoy es {format(hoy, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es })} • Te invitamos a estudiar con alegría.
-          </p>
-        </div>
-
-        <div className="hidden md:flex items-center gap-3 border-l border-slate-200 pl-6 py-2 shrink-0">
-          <Quote size={20} className="text-slate-300 shrink-0" />
-          <p className="text-xs italic text-slate-400 max-w-[220px] leading-relaxed">
-            "Todo lo puedo en Cristo que me fortalece"
-          </p>
-        </div>
-      </div>
-
-      {/* 2. GRID DE INDICADORES / MÉTRICAS CLAVE */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        {/* Tarjeta 1: Lectura de Hoy */}
-        <div className="p-5 bg-white border border-slate-200/60 border-t-4 border-t-brand-primary rounded-2xl shadow-sm flex flex-col justify-between min-h-[140px] hover:shadow-md hover:border-slate-300/40 btn-transition">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-slate-900">
-              <BookOpen size={16} className="text-brand-primary" />
-              <span className="text-[10px] font-bold uppercase tracking-wider">Lectura de Hoy</span>
+    <div className="w-full select-none">
+      
+      {/* CONTENEDOR INTEGRAL DE PANTALLA ÚNICA */}
+      <div className="bg-white border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+        
+        {/* COLUMNA IZQUIERDA: BIENVENIDA, ALERTA Y TIMELINE */}
+        <div className="lg:col-span-7 p-6 md:p-8 flex flex-col space-y-6">
+          
+          {/* Cabecera interna */}
+          <div className="space-y-1 text-left">
+            <div className="flex items-center gap-1.5 text-brand-primary">
+              <MapPin size={12} className="shrink-0" />
+              <span className="text-[8px] font-bold uppercase tracking-wider">
+                Sede Cancún • Villas Otoch 4
+              </span>
             </div>
-            <span className="text-[8px] bg-red-50 text-brand-primary font-bold px-1.5 py-0.5 rounded">
-              RPSP
+            <h2 className="text-2xl font-black tracking-tight text-slate-800 capitalize leading-tight">
+              ¡Feliz {saludoDia}!
+            </h2>
+            <span className="text-[10px] text-slate-400 font-bold block mt-1">
+              {format(hoy, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es })}
             </span>
           </div>
-          <div className="mt-3">
-            <h3 className="text-xl font-extrabold text-slate-900 tracking-tight leading-none">
-              {lecturaHoy.libro}
-            </h3>
-            <p className="text-xs font-semibold text-slate-455 mt-1">
-              Capítulo {lecturaHoy.capitulo}
-            </p>
-          </div>
-          <p className="text-[10px] text-slate-400 leading-normal mt-2.5">
-            Mantén el hábito diario de estudiar la palabra de Dios.
-          </p>
-        </div>
 
-        {/* Tarjeta 2: Líder de la Semana */}
-        <div className="p-5 bg-white border border-slate-200/60 border-t-4 border-t-brand-gold rounded-2xl shadow-sm flex flex-col justify-between min-h-[140px] hover:shadow-md hover:border-slate-300/40 btn-transition">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-slate-900">
-              <Trophy size={16} className="text-brand-gold" />
-              <span className="text-[10px] font-bold uppercase tracking-wider">Líder Semanal</span>
-            </div>
-            <span className="text-[8px] bg-amber-50 text-brand-gold font-bold px-1.5 py-0.5 rounded uppercase">
-              Top 1
-            </span>
-          </div>
-          <div className="mt-3">
-            <h3 className="text-xl font-extrabold text-slate-900 tracking-tight leading-none truncate">
-              {liderPuntos.nombre}
-            </h3>
-            <p className="text-xs font-semibold text-slate-455 mt-1">
-              Líder: {liderPuntos.lider}
-            </p>
-          </div>
-          <div className="mt-2.5 flex items-baseline gap-1">
-            <span className="text-sm font-black text-slate-900 tabular-nums">
-              {liderPuntos.puntos.toLocaleString()}
-            </span>
-            <span className="text-[9px] font-bold text-slate-400 uppercase">Puntos</span>
-          </div>
-        </div>
-
-        {/* Tarjeta 3: Conexión Bíblica */}
-        <div className="p-5 bg-white border border-slate-200/60 border-t-4 border-t-slate-400 rounded-2xl shadow-sm flex flex-col justify-between min-h-[140px] hover:shadow-md hover:border-slate-300/40 btn-transition">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-slate-900">
-              <Sparkles size={16} className="text-slate-500" />
-              <span className="text-[10px] font-bold uppercase tracking-wider">Conexión Bíblica</span>
-            </div>
-            <span className="text-[8px] bg-slate-100 text-slate-655 font-bold px-1.5 py-0.5 rounded uppercase">
-              Estudio 2026
-            </span>
-          </div>
-          <div className="mt-3">
-            <h3 className="text-xl font-extrabold text-slate-900 tracking-tight leading-none">
-              Evangelio de Salmos
-            </h3>
-            <p className="text-xs font-semibold text-slate-455 mt-1">
-              Libro oficial de la conexión bíblica
-            </p>
-          </div>
-          <p className="text-[10px] text-slate-400 leading-normal mt-2.5">
-            Lee y medita en el evangelio oficial para sumar puntos.
-          </p>
-        </div>
-
-      </div>
-
-      {/* 3. PANEL DIVIDIDO DE DETALLES */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-        {/* TARJETA DE HORARIO & TOLERANCIA - SÓLO MÓVIL */}
-        <div className="block lg:hidden order-1 p-5 bg-white border border-slate-200/60 border-t-4 border-t-amber-500 rounded-2xl shadow-sm space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-            <Clock size={16} className="text-amber-500" />
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">Horario oficial</h4>
-          </div>
-          <div className="space-y-1">
-            <span className="text-2xl font-black text-slate-900 tracking-tight">17:00 HRS</span>
-            <p className="text-xs text-slate-400">Inicio formal del programa sabático de la Sociedad de Jóvenes.</p>
-          </div>
-          <div className="flex items-start gap-2.5 p-3 bg-amber-50/50 border border-amber-100 rounded-xl">
+          {/* Banner de Tolerancia integrado */}
+          <div className="p-3.5 bg-amber-50/50 border border-brand-gold/15 rounded-2xl flex items-start gap-2.5">
             <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
-            <p className="text-[10px] text-amber-800 leading-relaxed">
-              <strong>Tolerancia:</strong> Se cuenta con un margen de <strong>10 minutos</strong> de tolerancia para el registro de asistencia a las unidades. Los directores de canto inician preludio a las 17:10 hrs.
-            </p>
-          </div>
-        </div>
-
-        {/* COLUMNA PRINCIPAL (Itinerario del Culto)*/}
-        <div className="order-2 lg:order-1 lg:col-span-8 bg-white border border-slate-200/60 rounded-2xl shadow-sm overflow-hidden p-4 md:p-6">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-            <div className="flex items-center gap-2">
-              <Clock size={18} className="text-brand-primary" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900">
-                Programa de Culto Joven
-              </h3>
-            </div>
-          </div>
-
-          <div className="mt-6 relative pl-6 border-l border-slate-100 space-y-4">
-            {programaHoy.map((p, i) => (
-              <div key={i} className="relative group">
-
-                {/* Nodo de la línea de tiempo */}
-                <div className="absolute -left-[30px] top-[18px] w-2.5 h-2.5 rounded-full bg-white border-2 border-brand-primary flex items-center justify-center group-hover:bg-brand-primary btn-transition">
-                  <div className="w-1 h-1 rounded-full bg-brand-primary group-hover:bg-white" />
-                </div>
-
-                {/* Bloque de Contenido de Actividad */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl hover:bg-slate-55/40 btn-transition border border-transparent hover:border-slate-100">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-slate-55 rounded-lg text-slate-500 shrink-0 mt-0.5 group-hover:bg-white group-hover:shadow-sm btn-transition">
-                      {getIconForActividad(p.actividad)}
-                    </div>
-                    <div className="space-y-0.5">
-                      <span className="text-[10px] font-bold text-brand-primary tracking-wider uppercase tabular-nums block">
-                        {p.hora}
-                      </span>
-                      <h4 className="text-sm font-bold text-slate-800">
-                        {p.actividad}
-                      </h4>
-                    </div>
-                  </div>
-
-                  {p.responsable !== "---" && (
-                    <div className="flex items-center gap-1.5 self-start sm:self-center px-2 py-0.5 bg-slate-50 border border-slate-100 rounded-lg text-slate-550 shrink-0">
-                      <User size={10} />
-                      <span className="text-[9px] font-bold uppercase tracking-wider">
-                        {p.responsable}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* TARJETA DE UBICACIÓN - SÓLO MÓVIL */}
-        <div className="block lg:hidden order-3 p-5 bg-white border border-slate-200/60 rounded-2xl shadow-sm space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-            <MapPin size={16} className="text-brand-primary" />
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">Ubicación y Sede</h4>
-          </div>
-          <div className="space-y-1">
-            <h5 className="text-xs font-bold text-slate-800">Iglesia Adventista del Séptimo Día</h5>
-            <p className="text-xs text-slate-455 leading-relaxed">
-              Sede Villas Otoch 4, Cancún Quintana Roo.<br />
-              Asociación de Quintana Roo • Unión Mexicana del Sureste.
-            </p>
-          </div>
-          <div className="pt-3 border-t border-slate-100 space-y-1.5">
-            <div className="flex justify-between text-[10px]">
-              <span className="text-slate-400">Director:</span>
-              <span className="font-semibold text-slate-700">Perla Ivon Gomez Cruz</span>
-            </div>
-            <div className="flex justify-between text-[10px]">
-              <span className="text-slate-400">Subdirector:</span>
-              <span className="font-semibold text-slate-700">Nolberto Coto Chagala</span>
-            </div>
-          </div>
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
-            <span>Sociedad de Jóvenes</span>
-            <span className="font-bold text-brand-primary">JA 2026</span>
-          </div>
-        </div>
-
-        {/* COLUMNA LATERAL (SÓLO ESCRITORIO) */}
-        <div className="hidden lg:flex flex-col gap-6 lg:col-span-4 lg:order-2">
-
-          {/* Tarjeta de Horario & Tolerancia */}
-          <div className="p-5 bg-white border border-slate-200/60 border-t-4 border-t-amber-500 rounded-2xl shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-              <Clock size={16} className="text-amber-500" />
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">Horario oficial</h4>
-            </div>
-            <div className="space-y-1">
-              <span className="text-2xl font-black text-slate-900 tracking-tight">17:00 HRS</span>
-              <p className="text-xs text-slate-400">Inicio formal del programa sabático de la Sociedad de Jóvenes.</p>
-            </div>
-            <div className="flex items-start gap-2.5 p-3 bg-amber-50/50 border border-amber-100 rounded-xl">
-              <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
-              <p className="text-[10px] text-amber-800 leading-relaxed">
-                <strong>Tolerancia:</strong> Se cuenta con un margen de <strong>10 minutos</strong> de tolerancia para el registro de asistencia a las unidades. Los directores de canto inician preludio a las 17:10 hrs.
+            <div className="text-left">
+              <span className="text-[8px] font-black text-amber-800 uppercase tracking-wide block">Tolerancia de asistencia</span>
+              <p className="text-[9px] text-amber-800 leading-normal font-semibold mt-0.5">
+                Margen de <strong>10 minutos</strong> para el registro en unidades (17:00 - 17:10 hrs). Preludio de canto inicia a las 17:10 hrs.
               </p>
             </div>
           </div>
 
-          {/* Tarjeta de Ubicación */}
-          <div className="p-5 bg-white border border-slate-200/60 rounded-2xl shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-              <MapPin size={16} className="text-brand-primary" />
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">Ubicación y Sede</h4>
+          {/* Línea de tiempo */}
+          <div className="space-y-4 flex-1 flex flex-col min-h-0">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Itinerario oficial</span>
+              <span className="text-[8px] bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded-lg uppercase">
+                17:00 HRS
+              </span>
             </div>
-            <div className="space-y-1">
-              <h5 className="text-xs font-bold text-slate-800">Iglesia Adventista del Séptimo Día</h5>
-              <p className="text-xs text-slate-455 leading-relaxed">
+
+            {/* Listado de Actividades */}
+            <div className="relative pl-5 border-l border-slate-100 space-y-2">
+              {programaHoy.map((p, i) => (
+                <div key={i} className="relative group">
+                  {/* Punto del timeline */}
+                  <div className="absolute -left-[25px] top-[14px] w-2.5 h-2.5 rounded-full bg-white border-2 border-brand-primary flex items-center justify-center group-hover:bg-brand-primary transition-all">
+                    <div className="w-0.5 h-0.5 rounded-full bg-brand-primary group-hover:bg-white" />
+                  </div>
+
+                  {/* Actividad */}
+                  <div className="flex items-center justify-between gap-3 p-2 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100/50 transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="p-1.5 bg-slate-50 border border-slate-100 rounded-lg text-slate-550 shrink-0">
+                        {getIconForActividad(p.actividad)}
+                      </div>
+                      <div className="text-left">
+                        <span className="text-[8px] font-bold text-brand-primary uppercase block leading-none mb-0.5">
+                          {p.hora}
+                        </span>
+                        <h4 className="text-xs font-bold text-slate-800 leading-tight">
+                          {p.actividad}
+                        </h4>
+                      </div>
+                    </div>
+
+                    {p.responsable !== "---" && (
+                      <span className="text-[8px] bg-slate-50 text-slate-550 border border-slate-200/40 px-2 py-0.5 rounded-md font-bold uppercase shrink-0">
+                        {p.responsable}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* COLUMNA DERECHA: ESTADÍSTICAS, LIDERAZGO, IDEALES Y DIRECCIÓN */}
+        <div className="lg:col-span-5 bg-slate-50/30 lg:border-l lg:border-slate-100 p-6 md:p-8 flex flex-col justify-between gap-5">
+          
+          {/* 1. LECTURA BÍBLICA DIARIA */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <BookOpen size={13} className="text-brand-primary" />
+                <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Lectura de hoy</span>
+              </div>
+              <span className="text-[8px] bg-red-50 text-brand-primary border border-red-100/50 font-bold px-2 py-0.5 rounded-md uppercase">
+                RPSP
+              </span>
+            </div>
+            <div className="text-left p-3.5 bg-white border border-slate-200/60 rounded-2xl shadow-xs">
+              <h3 className="text-base font-black text-slate-800 leading-none">
+                {lecturaHoy.libro}
+              </h3>
+              <p className="text-[11px] font-black text-brand-gold mt-1.5 leading-none">
+                Capítulo {lecturaHoy.capitulo}
+              </p>
+            </div>
+          </div>
+
+          {/* 2. LIBRO DE LA CONEXIÓN BÍBLICA */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <Sparkles size={13} className="text-brand-gold" />
+                <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Conexión bíblica</span>
+              </div>
+              <span className="text-[8px] bg-amber-50 text-brand-gold border border-brand-gold/15 font-bold px-2 py-0.5 rounded-md uppercase">
+                Estudio 2026
+              </span>
+            </div>
+            <div className="text-left p-3.5 bg-white border border-slate-200/60 rounded-2xl shadow-xs">
+              <h3 className="text-base font-black text-slate-800 leading-none">
+                Evangelio de Salmos
+              </h3>
+              <p className="text-[10px] text-slate-400 font-bold mt-1.5 leading-none">
+                Libro oficial de estudio juvenil
+              </p>
+            </div>
+          </div>
+
+          {/* 3. LÍDER DE LA SEMANA */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between select-none">
+              <div className="flex items-center gap-1.5">
+                <Trophy size={13} className="text-brand-gold" />
+                <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Líder de la semana</span>
+              </div>
+              <span className="text-[8px] bg-amber-50 text-brand-gold border border-brand-gold/15 font-bold px-2 py-0.5 rounded-md uppercase">
+                Top 1
+              </span>
+            </div>
+
+            <div className="p-3 bg-white border border-slate-200/60 rounded-2xl flex items-center justify-between select-none">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 bg-amber-50 border border-brand-gold/20 rounded-xl flex items-center justify-center shrink-0 text-brand-gold">
+                  <Trophy size={14} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-xs font-black text-slate-800 truncate max-w-[140px]">{liderPuntos.nombre}</span>
+                  <span className="text-[8px] text-slate-400 font-bold leading-none mt-0.5">Líder: {liderPuntos.lider}</span>
+                </div>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="text-xs font-black text-slate-855">{liderPuntos.puntos.toLocaleString()}</span>
+                <span className="text-[7px] text-slate-405 font-bold uppercase tracking-wider mt-0.5">puntos</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. IDEALES JA */}
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-1.5 select-none">
+              <Compass size={13} className="text-brand-primary" />
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Ideales JA</span>
+            </div>
+            <div className="p-3.5 bg-white border border-slate-200/60 rounded-2xl space-y-2.5 text-left">
+              <div className="space-y-0.5">
+                <span className="text-[8px] font-black text-slate-400 uppercase tracking-wider block">Blanco</span>
+                <p className="text-[10px] font-bold text-slate-700 leading-normal">
+                  "El mensaje del advenimiento a todo el mundo en mi generación."
+                </p>
+              </div>
+              <div className="space-y-0.5 pt-2 border-t border-slate-100">
+                <span className="text-[8px] font-black text-slate-400 uppercase tracking-wider block">Lema</span>
+                <p className="text-[10px] font-bold text-slate-700 leading-normal">
+                  "El amor de Cristo nos constriñe."
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 5. UBICACIÓN Y SEDE DE LA IGLESIA */}
+          <div className="pt-4 border-t border-slate-100 space-y-3.5">
+            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-100 select-none">
+              <MapPin size={14} className="text-brand-primary" />
+              <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Ubicación y sede</span>
+            </div>
+            <div className="space-y-1 text-left select-none">
+              <h5 className="text-[10px] font-black text-slate-800">Iglesia Adventista del Séptimo Día</h5>
+              <p className="text-[9.5px] text-slate-450 leading-normal font-semibold">
                 Sede Villas Otoch 4, Cancún Quintana Roo.<br />
                 Asociación de Quintana Roo • Unión Mexicana del Sureste.
               </p>
             </div>
-            <div className="pt-3 border-t border-slate-100 space-y-1.5">
-              <div className="flex justify-between text-[10px]">
-                <span className="text-slate-400">Director:</span>
-                <span className="font-semibold text-slate-700">Perla Ivon Gomez Cruz</span>
+            
+            <div className="pt-2 border-t border-slate-100 space-y-1.5 select-none">
+              <div className="flex justify-between text-[9px] font-semibold text-slate-400 text-left">
+                <div className="flex flex-col">
+                  <span className="font-bold text-slate-700">Perla Ivon Gomez Cruz</span>
+                  <span>Director</span>
+                </div>
+                <div className="flex flex-col text-right">
+                  <span className="font-bold text-slate-700">Nolberto Coto Chagala</span>
+                  <span>Subdirector</span>
+                </div>
               </div>
-              <div className="flex justify-between text-[10px]">
-                <span className="text-slate-400">Subdirector:</span>
-                <span className="font-semibold text-slate-700">Nolberto Coto Chagala</span>
+              <div className="flex items-center justify-between text-[8px] text-slate-400 font-bold uppercase mt-1">
+                <span>Sociedad de Jóvenes</span>
+                <span className="text-brand-primary">JA 2026</span>
               </div>
-            </div>
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
-              <span>Sociedad de Jóvenes</span>
-              <span className="font-bold text-brand-primary">JA 2026</span>
             </div>
           </div>
 
