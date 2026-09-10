@@ -28,7 +28,6 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
   return (
     <div className="min-h-screen bg-[#F4F7FE] flex flex-col md:flex-row font-sans">
       
-      {/* BARRA SUPERIOR MÓVIL OSCURA (ESTILO DASHBOARD SEGURO) */}
       <div className="md:hidden bg-slate-950 text-white p-4 flex justify-between items-center sticky top-0 z-[60] shadow-md select-none border-b border-white/5">
         <div className="flex items-center gap-2.5">
           <div className="bg-[#003366] p-1.5 rounded-lg text-white">
@@ -47,7 +46,6 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
         </button>
       </div>
 
-      {/* Backdrop para cerrar el menú móvil al hacer clic fuera */}
       {isMobileMenuOpen && (
         <div 
           onClick={() => setIsMobileMenuOpen(false)}
@@ -55,7 +53,6 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
         />
       )}
 
-      {/* SIDEBAR OSCURO PROFESIONAL (ESTILO CENTRO DE CONTROL) */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 md:relative md:flex w-3/4 sm:w-80 md:w-64 bg-slate-950 text-white p-6 flex-col justify-between shrink-0 transition-transform duration-300 ease-in-out border-r border-white/5
         ${isMobileMenuOpen ? "translate-x-0 pt-20" : "-translate-x-full md:translate-x-0 md:pt-8"}
@@ -72,7 +69,6 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
             </div>
           </div>
           
-          {/* NAVEGACIÓN */}
           <nav className="space-y-1.5 select-none">
             <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-4">Sistemas</p>
             
@@ -109,7 +105,6 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
           </nav>
         </div>
 
-        {/* PERFIL OPERADOR Y CERRAR SESIÓN */}
         <div className="pt-6 border-t border-white/5 space-y-4">
           <div className="bg-white/5 border border-white/5 p-4 rounded-2xl select-none">
             <p className="text-[8px] text-slate-500 font-bold uppercase tracking-wider mb-1">Operador activo</p>
@@ -127,7 +122,6 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
         </div>
       </aside>
 
-      {/* ÁREA PRINCIPAL DE TRABAJO (FONDO GRIS PLATA CLARO Y CABECERA BLANCA) */}
       <main className="flex-1 p-5 md:p-10 space-y-8 overflow-y-auto">
         <header className="flex justify-between items-center bg-white p-4 px-6 rounded-3xl shadow-sm border border-slate-200/80 select-none">
           <div className="flex items-center gap-4">

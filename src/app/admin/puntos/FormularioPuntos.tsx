@@ -212,7 +212,7 @@ export default function FormularioPuntos({ unidades }: { unidades: Unidad[] }) {
           </table>
         </div>
 
-        {/* VISTA MÓVIL: Tarjetas Compactas (Celulares) */}
+        {/* VISTA MÓVIL */}
         <div className="block sm:hidden divide-y divide-slate-100">
           {(() => {
             const maxPuntos = unidades[0]?.puntos || 1;
@@ -297,7 +297,6 @@ export default function FormularioPuntos({ unidades }: { unidades: Unidad[] }) {
         </div>
       </div>
 
-      {/* MODAL POPUP PARA INGRESO DIRECTO DE PUNTOS */}
       {activeModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="fixed inset-0 cursor-default" onClick={() => setActiveModal(null)} />
@@ -333,12 +332,10 @@ export default function FormularioPuntos({ unidades }: { unidades: Unidad[] }) {
               </button>
             </div>
 
-            {/* Formulario */}
             <form action={formAction} className="space-y-6">
               <input type="hidden" name="unidadId" value={activeModal.uId} />
               <input type="hidden" name="tipoOperacion" value={activeModal.tipo} />
 
-              {/* Stepper del Modal */}
               <div className="flex flex-col items-center justify-center p-5 bg-slate-50 border border-slate-200/50 rounded-2xl space-y-3">
                 <span className="text-[9px] font-bold text-slate-400 select-none">
                   {activeModal.tipo === "sumar" ? "Cantidad a sumar" : "Establecer puntos exactos"}
@@ -372,7 +369,6 @@ export default function FormularioPuntos({ unidades }: { unidades: Unidad[] }) {
                   </button>
                 </div>
 
-                {/* Presets */}
                 <div className="flex gap-1.5 pt-0.5">
                   {activeModal.tipo === "sumar" ? (
                     <>
