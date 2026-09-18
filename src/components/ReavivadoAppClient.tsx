@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AppLayout from "@/components/AppLayout";
+import { AppLayout } from "@/components/layout";
 import DayView from "@/components/views/DayView";
 import WeekView from "@/components/views/WeekView";
 import CalendarioMensual from "@/components/monthly_calendar";
