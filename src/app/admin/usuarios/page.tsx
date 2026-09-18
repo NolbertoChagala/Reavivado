@@ -1,7 +1,7 @@
 import prisma from "@/lib/db";
 import FormularioUsuario from "./FormularioUsuario";
 import ListaUsuarios from "./ListaUsuarios";
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/components/layout/AdminLayout";
 import { UserPlus, Shield, Users, ShieldAlert } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

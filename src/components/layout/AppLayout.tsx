@@ -1,14 +1,12 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Home, Users, Calendar, Settings, ChevronRight } from "lucide-react";
 import { APP_NAME, APP_SUBTITLE } from "@/constants/app";
-import logoadventista from "@/assets/img/logoadventista.webp";
-import JA from "@/assets/img/JA.webp";
 import Header from "./Header";
 import NavigationBar from "./NavigationBar";
+import { BrandLogo } from "./BrandLogo";
 
 type Vista = "dia" | "semana" | "mes";
 
@@ -45,32 +43,15 @@ export default function AppLayout({
         behavior: "smooth",
       });
     }
-  };  return (
-    <div className="min-h-screen bg-[#f4f6f9] flex flex-col md:flex-row text-slate-900 font-sans antialiased font-medium font-medium">
+  };
+
+  return (
+    <div className="min-h-screen bg-[#f4f6f9] flex flex-col md:flex-row text-slate-900 font-sans antialiased font-medium">
       
-      {/* SIDEBAR PARA DESKTOP - MINIMALISTA BLANCO Y ACCIONES JA */}
       <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200/60 h-screen sticky top-0 shrink-0 justify-between select-none">
         <div className="flex flex-col">
-          {/* Header del Sidebar */}
           <div className="p-6 border-b border-slate-200/60 flex items-center gap-3">
-            <div className="flex items-center gap-1.5 p-1 bg-slate-50 border border-slate-100 rounded-lg shadow-sm">
-              <Image
-                src={logoadventista}
-                alt="IASD"
-                width={26}
-                height={26}
-                className="object-contain"
-                priority
-              />
-              <Image
-                src={JA}
-                alt="JA"
-                width={26}
-                height={26}
-                className="object-contain"
-                priority
-              />
-            </div>
+            <BrandLogo size={26} />
             <div className="flex flex-col min-w-0">
               <h1 className="text-sm font-black tracking-tight text-slate-900 uppercase leading-none">
                 {APP_NAME}
@@ -81,7 +62,6 @@ export default function AppLayout({
             </div>
           </div>
 
-          {/* Navegación */}
           <nav className="p-4 space-y-1">
             <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 py-2">
               Menú Principal
@@ -141,22 +121,17 @@ export default function AppLayout({
           </nav>
         </div>
 
-        {/* Footer del Sidebar */}
         <div className="p-4 border-t border-slate-200/60 text-[10px] text-slate-400">
           <p className="font-semibold uppercase tracking-wider text-slate-500">Villas Otoch 4</p>
           <p className="mt-0.5">Sociedad de Jóvenes JA</p>
         </div>
       </aside>
 
-      {/* HEADER DE MÓVIL */}
       <div className="block md:hidden sticky top-0 z-50">
         <Header />
       </div>
 
-      {/* ÁREA DE CONTENIDO */}
       <div className="flex-1 flex flex-col min-w-0">
-        
-        {/* HEADER DE SECCIÓN EN DESKTOP */}
         <header className="hidden md:flex items-center justify-between px-8 py-5 bg-white border-b border-slate-200/60 sticky top-0 z-45">
           <h2 className="text-lg font-bold text-slate-800 tracking-tight">
             {pageTitle}
@@ -166,13 +141,11 @@ export default function AppLayout({
           </div>
         </header>
 
-        {/* CONTENEDOR ANCHO COMPLETAMENTE OPTIMIZADO */}
         <main className="flex-1 overflow-x-hidden p-4 md:p-10 w-full max-w-[1400px] mx-auto pb-24 md:pb-12 animate-in fade-in duration-300">
           {children}
         </main>
       </div>
 
-      {/* BARRA DE NAVEGACIÓN MÓVIL */}
       <div className="block md:hidden">
         <NavigationBar vistaActual={vistaActual} onChangeVista={onChangeVista} />
       </div>
