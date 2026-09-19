@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import AdminLayout from "@/components/AdminLayout";
+import { AdminLayout } from "@/components/layout";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import FormularioPuntos from "./FormularioPuntos";
