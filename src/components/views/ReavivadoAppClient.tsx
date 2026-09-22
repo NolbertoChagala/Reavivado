@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AppLayout } from "@/components/layout";
 import DayView from "@/components/views/DayView";
 import WeekView from "@/components/views/WeekView";
-import CalendarioMensual from "@/components/monthly_calendar";
+import CalendarioMensual from "@/components/views/Monthly_calendar";
 import { obtenerLecturaPorFecha, obtenerSemanaActual } from "@/lib/bibleLogic";
 import { useCurrentDate, useScrollIntoView } from "@/hooks";
 
