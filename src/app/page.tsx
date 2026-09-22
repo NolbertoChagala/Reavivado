@@ -1,6 +1,5 @@
-// src/app/page.tsx
 import prisma from "@/lib/db";
-import ReavivadoAppClient from "@/components/ReavivadoAppClient";
+import { ReavivadoAppClient } from "@/components/views";
 
 export default async function Page() {
   const unidadesDB = await prisma.unidad.findMany({
