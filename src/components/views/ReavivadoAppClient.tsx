@@ -1,9 +1,10 @@
+// src/components/views/ReavivadoAppClient.tsx
 "use client";
 import { useState } from "react";
 import { AppLayout } from "@/components/layout";
-import DayView from "@/components/views/DayView";
-import WeekView from "@/components/views/WeekView";
-import CalendarioMensual from "@/components/views/Monthly_calendar";
+import DayView from "./DayView";
+import WeekView from "./WeekView";
+import MonthlyCalendar from "./Monthly_calendar";
 import { obtenerLecturaPorFecha, obtenerSemanaActual } from "@/lib/bibleLogic";
 import { useCurrentDate, useScrollIntoView } from "@/hooks";
 
@@ -29,7 +30,6 @@ export default function ReavivadoAppClient({ unidades }: Props) {
 
   return (
     <AppLayout vistaActual={vista} onChangeVista={(nuevaVista) => {
-      // Si el usuario regresa a "dia" pero no hay fecha seleccionada, por defecto usa hoy
       setVista(nuevaVista);
     }}>
       {vista === "dia" && (
@@ -48,7 +48,7 @@ export default function ReavivadoAppClient({ unidades }: Props) {
         />
       )}
       {vista === "mes" && (
-        <CalendarioMensual 
+        <MonthlyCalendar 
           fecha={fechaActiva} 
           onSeleccionarFecha={(fecha) => {
             setFechaSeleccionada(fecha);
