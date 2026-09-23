@@ -2,7 +2,7 @@ import prisma from "@/lib/db";
 import { AdminLayout } from "@/components/layout";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import FormularioPuntos from "./FormularioPuntos";
+import FormularioPuntos from "../../../components/admin/puntos/PointsManagement";
 import { Trophy, Hash, Users } from "lucide-react";
 
 export default async function AdminPuntosPage() {
