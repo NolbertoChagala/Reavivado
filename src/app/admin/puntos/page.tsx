@@ -1,9 +1,8 @@
 import prisma from "@/lib/db";
 import { AdminLayout } from "@/components/layout";
+import { PointsManagement } from "@/components/admin";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import FormularioPuntos from "../../../components/admin/puntos/PointsManagement";
-import { Trophy, Hash, Users } from "lucide-react";
 
 export default async function AdminPuntosPage() {
   const cookieStore = await cookies();
@@ -14,7 +13,6 @@ export default async function AdminPuntosPage() {
     redirect("/login");
   }
 
-  // Carga de datos del administrador y unidades en Cancún
   const [admin, unidades] = await Promise.all([
     prisma.usuario.findUnique({ where: { id: session.value } }),
     prisma.unidad.findMany({ orderBy: { puntos: "desc" } }),
@@ -22,7 +20,7 @@ export default async function AdminPuntosPage() {
 
   return (
     <AdminLayout adminName={admin?.nombre} activeTab="puntos">
-      <FormularioPuntos unidades={unidades} />
+      <PointsManagement unidades={unidades} />
     </AdminLayout>
   );
 }
