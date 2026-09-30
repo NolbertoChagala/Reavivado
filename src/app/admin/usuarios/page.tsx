@@ -1,21 +1,19 @@
 import prisma from "@/lib/db";
 import { AdminLayout } from "@/components/layout";
 import { AdminPageHeader, KpiCard, UserForm, UserList } from "@/components/admin";
-import { UserPlus, Shield, Users, ShieldAlert } from "lucide-react";
-import { cookies } from "next/headers";
+import { Shield, Users, ShieldAlert, UserPlus } from "lucide-react";
+import { getCurrentSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 export default async function UsuariosPage() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("session_user");
-  const role = cookieStore.get("user_role");
+  const session = await getCurrentSession();
 
-  if (!session || role?.value !== "ADMIN") {
+  if (!session || session.role !== "ADMIN") {
     redirect("/login");
   }
 
   const [admin, usuarios] = await Promise.all([
-    prisma.usuario.findUnique({ where: { id: session.value } }),
+    prisma.usuario.findUnique({ where: { id: session.userId } }),
     prisma.usuario.findMany({ orderBy: { nombre: "asc" } }),
   ]);
 
@@ -67,7 +65,7 @@ export default async function UsuariosPage() {
         </section>
 
         <section className="lg:col-span-7">
-          <UserList usuarios={usuarios} currentAdminId={session.value} />
+          <UserList usuarios={usuarios} currentAdminId={session.userId} />
         </section>
       </div>
     </AdminLayout>
