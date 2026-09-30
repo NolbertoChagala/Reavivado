@@ -1,20 +1,18 @@
 import prisma from "@/lib/db";
 import { AdminLayout } from "@/components/layout";
 import { PointsManagement } from "@/components/admin";
-import { cookies } from "next/headers";
+import { getCurrentSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 export default async function AdminPuntosPage() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("session_user");
-  const role = cookieStore.get("user_role");
+  const session = await getCurrentSession();
 
-  if (!session || role?.value !== "ADMIN") {
+  if (!session || session.role !== "ADMIN") {
     redirect("/login");
   }
 
   const [admin, unidades] = await Promise.all([
-    prisma.usuario.findUnique({ where: { id: session.value } }),
+    prisma.usuario.findUnique({ where: { id: session.userId } }),
     prisma.unidad.findMany({ orderBy: { puntos: "desc" } }),
   ]);
 
