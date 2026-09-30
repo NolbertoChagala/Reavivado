@@ -4,6 +4,7 @@ import prisma from "@/lib/db";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { createSessionToken } from "@/lib/session";
 
 export async function login(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -14,7 +15,7 @@ export async function login(prevState: any, formData: FormData) {
   });
 
   if (!usuario) {
-    return { error: "Credenciales inválidas" }; 
+    return { error: "Credenciales inválidas" };
   }
 
   const passwordMatch = await bcrypt.compare(password, usuario.password);
@@ -22,23 +23,25 @@ export async function login(prevState: any, formData: FormData) {
     return { error: "Credenciales inválidas" };
   }
 
-  const cookieStore = await cookies();
-
-  cookieStore.set("session_user", usuario.id, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7,
-    path: "/",
+  const sessionToken = createSessionToken({
+    userId: usuario.id,
+    role: usuario.rol,
   });
 
-  cookieStore.set("user_role", usuario.rol, {
+  const cookieStore = await cookies();
+
+  cookieStore.set("auth_session", sessionToken, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7, 
     path: "/",
   });
 
   cookieStore.set("is_logged_in", "true", {
     httpOnly: false,
     secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7,
     path: "/",
   });
@@ -48,8 +51,7 @@ export async function login(prevState: any, formData: FormData) {
 
 export async function logout() {
   const cookieStore = await cookies();
-  cookieStore.delete("session_user");
-  cookieStore.delete("user_role");
+  cookieStore.delete("auth_session");
   cookieStore.delete("is_logged_in");
   redirect("/");
 }
