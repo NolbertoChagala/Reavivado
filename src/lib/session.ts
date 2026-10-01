@@ -1,14 +1,25 @@
 import { cookies } from "next/headers";
 
-const SESSION_SECRET =
-  process.env.AUTH_SECRET || "reavivado-secret-key-super-secure-change-in-production";
+function getSessionSecret(): string {
+  const secret = process.env.AUTH_SECRET;
+
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("ERROR DE SEGURIDAD: La variable AUTH_SECRET no está definida en producción.");
+    }
+    // Solo para entorno local de desarrollo si aún no se configuró el .env
+    return "dev-local-secret-key-reavivado-only-change-in-env";
+  }
+
+  return secret;
+}
 
 export interface SessionPayload {
   userId: string;
   role: string;
 }
 
-// Codificación segura Base64URL compatible con Edge y Browser
+// Codificación Base64URL segura compatible con Edge Runtime y Browser
 function bytesToBase64Url(bytes: Uint8Array): string {
   let binary = "";
   for (let i = 0; i < bytes.byteLength; i++) {
@@ -32,19 +43,20 @@ function base64UrlToBytes(base64url: string): Uint8Array {
   return bytes;
 }
 
-// Obtener clave HMAC usando Web Crypto
+// Clave HMAC importada bajo Web Crypto API
 async function getCryptoKey(): Promise<CryptoKey> {
+  const secret = getSessionSecret();
   const enc = new TextEncoder();
   return crypto.subtle.importKey(
     "raw",
-    enc.encode(SESSION_SECRET),
+    enc.encode(secret),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign", "verify"]
   );
 }
 
-// Firmar datos con Web Crypto
+// Firma criptográfica HMAC-SHA256
 async function sign(value: string): Promise<string> {
   const key = await getCryptoKey();
   const enc = new TextEncoder();
@@ -52,7 +64,7 @@ async function sign(value: string): Promise<string> {
   return bytesToBase64Url(new Uint8Array(signature));
 }
 
-// Crear token firmado
+// Genera un token firmado: "payloadBase64.firmaHmac"
 export async function createSessionToken(payload: SessionPayload): Promise<string> {
   const json = JSON.stringify(payload);
   const enc = new TextEncoder();
@@ -61,7 +73,7 @@ export async function createSessionToken(payload: SessionPayload): Promise<strin
   return `${base64Data}.${signature}`;
 }
 
-// Verificar token firmado (timing-safe nativo de Web Crypto)
+// Valida la firma del token y retorna el payload deserializado
 export async function verifySessionToken(token?: string | null): Promise<SessionPayload | null> {
   if (!token) return null;
   const [base64Data, signature] = token.split(".");
@@ -75,8 +87,8 @@ export async function verifySessionToken(token?: string | null): Promise<Session
     const isValid = await crypto.subtle.verify(
       "HMAC",
       key,
-      signatureBytes,
-      enc.encode(base64Data)
+      signatureBytes as BufferSource,
+      enc.encode(base64Data) as BufferSource
     );
 
     if (!isValid) return null;
@@ -89,14 +101,14 @@ export async function verifySessionToken(token?: string | null): Promise<Session
   }
 }
 
-// Obtener sesión en Server Components y Server Actions
+// Obtiene la sesión actual desde las cookies en Server Components y Server Actions
 export async function getCurrentSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_session")?.value;
   return verifySessionToken(token);
 }
 
-// Guardia de seguridad para Server Actions
+// Guardia de acceso para Server Actions
 export async function assertAdmin(): Promise<SessionPayload> {
   const session = await getCurrentSession();
   if (!session || session.role !== "ADMIN") {
