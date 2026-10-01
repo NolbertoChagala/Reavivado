@@ -23,7 +23,7 @@ export async function login(prevState: any, formData: FormData) {
     return { error: "Credenciales inválidas" };
   }
 
-  const sessionToken = createSessionToken({
+ const sessionToken = await createSessionToken({
     userId: usuario.id,
     role: usuario.rol,
   });
