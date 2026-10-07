@@ -1,12 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifySessionToken } from "@/lib/session";
+import { Role } from "@prisma/client";
 
 export async function proxy(request: NextRequest) {
   const token = request.cookies.get("auth_session")?.value;
   const session = await verifySessionToken(token);
   const { pathname } = request.nextUrl;
 
-  const isAuth = Boolean(session && session.role === "ADMIN");
+  const isAuth = Boolean(session && session.role === Role.ADMIN);
 
   if (pathname.startsWith("/admin")) {
     if (!isAuth) {

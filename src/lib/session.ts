@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { Role } from "@prisma/client";
 
 function getSessionSecret(): string {
   const secret = process.env.AUTH_SECRET;
@@ -7,7 +8,6 @@ function getSessionSecret(): string {
     if (process.env.NODE_ENV === "production") {
       throw new Error("ERROR DE SEGURIDAD: La variable AUTH_SECRET no está definida en producción.");
     }
-    // Solo para entorno local de desarrollo si aún no se configuró el .env
     return "dev-local-secret-key-reavivado-only-change-in-env";
   }
 
@@ -16,10 +16,9 @@ function getSessionSecret(): string {
 
 export interface SessionPayload {
   userId: string;
-  role: string;
+  role: Role;
 }
 
-// Codificación Base64URL segura compatible con Edge Runtime y Browser
 function bytesToBase64Url(bytes: Uint8Array): string {
   let binary = "";
   for (let i = 0; i < bytes.byteLength; i++) {
@@ -43,7 +42,6 @@ function base64UrlToBytes(base64url: string): Uint8Array {
   return bytes;
 }
 
-// Clave HMAC importada bajo Web Crypto API
 async function getCryptoKey(): Promise<CryptoKey> {
   const secret = getSessionSecret();
   const enc = new TextEncoder();
@@ -56,7 +54,6 @@ async function getCryptoKey(): Promise<CryptoKey> {
   );
 }
 
-// Firma criptográfica HMAC-SHA256
 async function sign(value: string): Promise<string> {
   const key = await getCryptoKey();
   const enc = new TextEncoder();
@@ -64,7 +61,6 @@ async function sign(value: string): Promise<string> {
   return bytesToBase64Url(new Uint8Array(signature));
 }
 
-// Genera un token firmado: "payloadBase64.firmaHmac"
 export async function createSessionToken(payload: SessionPayload): Promise<string> {
   const json = JSON.stringify(payload);
   const enc = new TextEncoder();
@@ -73,7 +69,6 @@ export async function createSessionToken(payload: SessionPayload): Promise<strin
   return `${base64Data}.${signature}`;
 }
 
-// Valida la firma del token y retorna el payload deserializado
 export async function verifySessionToken(token?: string | null): Promise<SessionPayload | null> {
   if (!token) return null;
   const [base64Data, signature] = token.split(".");
@@ -101,17 +96,15 @@ export async function verifySessionToken(token?: string | null): Promise<Session
   }
 }
 
-// Obtiene la sesión actual desde las cookies en Server Components y Server Actions
 export async function getCurrentSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth_session")?.value;
   return verifySessionToken(token);
 }
 
-// Guardia de acceso para Server Actions
 export async function assertAdmin(): Promise<SessionPayload> {
   const session = await getCurrentSession();
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role !== Role.ADMIN) {
     throw new Error("Acceso denegado: Se requieren permisos de administrador.");
   }
   return session;
