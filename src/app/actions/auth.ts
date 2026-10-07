@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createSessionToken } from "@/lib/session";
+import { Role } from "@prisma/client";
 
 export async function login(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -25,7 +26,7 @@ export async function login(prevState: any, formData: FormData) {
 
  const sessionToken = await createSessionToken({
     userId: usuario.id,
-    role: usuario.rol,
+    role: usuario.rol as Role,
   });
 
   const cookieStore = await cookies();
