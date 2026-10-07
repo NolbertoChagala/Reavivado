@@ -4,11 +4,12 @@ import { AdminPageHeader, KpiCard, UserForm, UserList } from "@/components/admin
 import { Shield, Users, ShieldAlert, UserPlus } from "lucide-react";
 import { getCurrentSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { Role } from "@prisma/client";
 
 export default async function UsuariosPage() {
   const session = await getCurrentSession();
 
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role !== Role.ADMIN) {
     redirect("/login");
   }
 
@@ -18,8 +19,7 @@ export default async function UsuariosPage() {
   ]);
 
   const totalCuentas = usuarios.length;
-  const totalAdmins = usuarios.filter((u) => u.rol === "ADMIN").length;
-
+  const totalAdmins = usuarios.filter((u) => u.rol === Role.ADMIN).length;
   return (
     <AdminLayout adminName={admin?.nombre} activeTab="usuarios">
       <AdminPageHeader
