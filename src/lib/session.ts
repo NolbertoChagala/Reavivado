@@ -1,5 +1,10 @@
 import { cookies } from "next/headers";
-import { Role } from "@prisma/client";
+
+export const Role = {
+  ADMIN: "ADMIN",
+} as const;
+
+export type Role = (typeof Role)[keyof typeof Role];
 
 function getSessionSecret(): string {
   const secret = process.env.AUTH_SECRET;

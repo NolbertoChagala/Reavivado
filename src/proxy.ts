@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { verifySessionToken } from "@/lib/session";
-import { Role } from "@prisma/client";
+import { verifySessionToken, Role } from "@/lib/session";
 
 export async function proxy(request: NextRequest) {
   const token = request.cookies.get("auth_session")?.value;
