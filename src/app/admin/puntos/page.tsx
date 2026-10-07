@@ -3,11 +3,12 @@ import { AdminLayout } from "@/components/layout";
 import { PointsManagement } from "@/components/admin";
 import { getCurrentSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { Role } from "@prisma/client";
 
 export default async function AdminPuntosPage() {
   const session = await getCurrentSession();
 
-  if (!session || session.role !== "ADMIN") {
+  if (!session || session.role !== Role.ADMIN) {
     redirect("/login");
   }
 
