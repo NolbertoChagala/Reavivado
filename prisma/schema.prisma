@@ -8,6 +8,10 @@ datasource db {
   provider = "postgresql" 
 }
 
+enum Role {
+  ADMIN
+}
+
 model Unidad {
   id            String   @id @default(cuid())
   nombreGrupo   String   @unique
