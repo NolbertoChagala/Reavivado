@@ -60,13 +60,13 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
 
   return (
     <div className="w-full select-none">
-      
+
       {/* CONTENEDOR INTEGRAL DE PANTALLA ÚNICA */}
       <div className="bg-white border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-        
+
         {/* COLUMNA IZQUIERDA: BIENVENIDA, ALERTA Y TIMELINE */}
         <div className="lg:col-span-7 p-6 md:p-8 flex flex-col space-y-6">
-          
+
           {/* Cabecera interna */}
           <div className="space-y-1 text-left">
             <div className="flex items-center gap-1.5 text-brand-primary">
@@ -143,7 +143,7 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
 
         {/* COLUMNA DERECHA: ESTADÍSTICAS, LIDERAZGO, IDEALES Y DIRECCIÓN */}
         <div className="lg:col-span-5 bg-slate-50/30 lg:border-l lg:border-slate-100 p-6 md:p-8 flex flex-col justify-between gap-5">
-          
+
           {/* 1. LECTURA BÍBLICA DIARIA */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
@@ -209,7 +209,9 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
                 </div>
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-xs font-black text-slate-855">{liderPuntos.puntos.toLocaleString()}</span>
+                <span className="text-xs font-black text-slate-800">
+                  {new Intl.NumberFormat("es-MX").format(liderPuntos.puntos)}
+                </span>
                 <span className="text-[7px] text-slate-405 font-bold uppercase tracking-wider mt-0.5">puntos</span>
               </div>
             </div>
@@ -250,7 +252,7 @@ export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps
                 Asociación de Quintana Roo • Unión Mexicana del Sureste.
               </p>
             </div>
-            
+
             <div className="pt-2 border-t border-slate-100 space-y-1.5 select-none">
               <div className="flex justify-between text-[9px] font-semibold text-slate-400 text-left">
                 <div className="flex flex-col">
