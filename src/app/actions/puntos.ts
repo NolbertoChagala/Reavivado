@@ -3,24 +3,28 @@
 import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { assertAdmin } from "@/lib/session";
+import { RegistrarPuntajeSchema } from "@/lib/validations";
 
 export async function registrarPuntaje(prevState: any, formData: FormData) {
   try {
     await assertAdmin();
 
-    const unidadId = formData.get("unidadId") as string;
-    const cantidadStr = formData.get("cantidad") as string;
-    const tipoOperacion = formData.get("tipoOperacion") as string;
+    const rawData = {
+      unidadId: formData.get("unidadId"),
+      cantidad: formData.get("cantidad"),
+      tipoOperacion: formData.get("tipoOperacion"),
+    };
 
-    const cantidad = parseInt(cantidadStr, 10);
+    const validationResult = RegistrarPuntajeSchema.safeParse(rawData);
 
-    if (isNaN(cantidad)) {
-      return { success: false, message: "La cantidad debe ser un número válido." };
+    if (!validationResult.success) {
+      return {
+        success: false,
+        message: validationResult.error.issues[0]?.message || "Datos no válidos.",
+      };
     }
 
-    if (!unidadId) {
-      return { success: false, message: "Identificador de unidad no válido." };
-    }
+    const { unidadId, cantidad, tipoOperacion } = validationResult.data;
 
     if (tipoOperacion === "fijar") {
       await prisma.unidad.update({
@@ -40,11 +44,11 @@ export async function registrarPuntaje(prevState: any, formData: FormData) {
     return { success: true, message: "¡Puntos actualizados correctamente!" };
   } catch (error: any) {
     console.error("Error al actualizar puntos:", error);
-    return { 
-      success: false, 
-      message: error?.message?.includes("Acceso denegado") 
-        ? error.message 
-        : "Error al guardar. Intenta de nuevo." 
+    return {
+      success: false,
+      message: error?.message?.includes("Acceso denegado")
+        ? error.message
+        : "Error al guardar. Intenta de nuevo.",
     };
   }
 }
