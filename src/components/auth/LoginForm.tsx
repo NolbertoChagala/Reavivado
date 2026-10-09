@@ -54,6 +54,7 @@ export default function LoginForm() {
                     alt="JA"
                     width={32}
                     height={32}
+                    style={{ width: "auto", height: "auto" }}
                     className="object-contain"
                     priority
                   />

@@ -24,6 +24,7 @@ export function BrandLogo({ size = 26, showDivider = false }: BrandLogoProps) {
         alt="JA"
         width={size}
         height={size}
+        style={{ width: "auto", height: "auto" }}
         className="object-contain"
         priority
       />

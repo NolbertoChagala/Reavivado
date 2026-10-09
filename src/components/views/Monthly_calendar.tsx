@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { LABELS } from "@/constants/app";
 import logoadventista from "@/assets/img/logoadventista.webp";
+import Image from "next/image";
 import JA from "@/assets/img/JA.webp";
 
 interface CalendarioMensualProps {
@@ -439,10 +440,13 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
 
             {/* Lado Izquierdo: Logo Iglesia + Títulos */}
             <div className="flex items-center gap-4">
-              <img
-                src={logoadventista.src}
+              <Image
+                src={logoadventista}
                 alt="Iglesia Adventista"
+                width={64}
+                height={64}
                 className="w-16 h-16 object-contain shrink-0"
+                style={{ width: "auto", height: "auto" }}
               />
               <div className="flex flex-col justify-center">
                 <h1 className="text-xl font-black tracking-wider uppercase leading-none">
@@ -464,10 +468,13 @@ export default function CalendarioMensual({ fecha, onSeleccionarFecha }: Calenda
                   {format(fechaFoco, "MMMM yyyy", { locale: es })}
                 </span>
               </div>
-              <img
-                src={JA.src}
-                alt="JA"
+              <Image
+                src={JA}
+                alt="Logo JA"
+                width={64}
+                height={64}
                 className="w-16 h-16 object-contain shrink-0"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
           </div>

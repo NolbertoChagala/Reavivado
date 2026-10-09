@@ -1,14 +1,14 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import { 
-  LayoutDashboard, 
-  Activity, 
-  Users, 
-  LogOut, 
-  ExternalLink, 
-  Menu, 
-  X 
+import {
+  LayoutDashboard,
+  Activity,
+  Users,
+  LogOut,
+  ExternalLink,
+  Menu,
+  X
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -27,7 +27,7 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
 
   return (
     <div className="min-h-screen bg-[#F4F7FE] flex flex-col md:flex-row font-sans">
-      
+
       <div className="md:hidden bg-slate-950 text-white p-4 flex justify-between items-center sticky top-0 z-[60] shadow-md select-none border-b border-white/5">
         <div className="flex items-center gap-2.5">
           <div className="bg-[#003366] p-1.5 rounded-lg text-white">
@@ -38,8 +38,8 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
             <span className="text-[7px] text-brand-gold font-bold uppercase tracking-widest mt-0.5">Control</span>
           </div>
         </div>
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-2 bg-white/10 border border-white/5 text-white rounded-xl active:scale-95 transition-all focus:outline-none focus:ring-0"
         >
           {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -47,7 +47,7 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
       </div>
 
       {isMobileMenuOpen && (
-        <div 
+        <div
           onClick={() => setIsMobileMenuOpen(false)}
           className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 md:hidden animate-in fade-in duration-200"
         />
@@ -68,37 +68,35 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
               <span className="text-[8px] text-brand-gold font-bold uppercase tracking-widest mt-1">Administración</span>
             </div>
           </div>
-          
+
           <nav className="space-y-1.5 select-none">
             <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-4">Sistemas</p>
-            
-            <Link href="/admin/puntos" 
+
+            <Link href="/admin/puntos"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 p-3 px-4 rounded-2xl text-xs font-bold border transition-all active:scale-[0.98] ${
-                activeTab === "puntos" 
-                  ? "bg-white/10 text-white border-white/5 shadow-sm" 
+              className={`flex items-center gap-3 p-3 px-4 rounded-2xl text-xs font-bold border transition-all active:scale-[0.98] ${activeTab === "puntos"
+                  ? "bg-white/10 text-white border-white/5 shadow-sm"
                   : "text-slate-400 hover:text-white hover:bg-white/5 border-transparent"
-              }`}>
-              <Activity size={16} className={activeTab === "puntos" ? "text-brand-gold" : "text-slate-500"} /> 
+                }`}>
+              <Activity size={16} className={activeTab === "puntos" ? "text-brand-gold" : "text-slate-500"} />
               <span>Gestión de puntos</span>
             </Link>
-            
-            <Link href="/admin/usuarios" 
+
+            <Link href="/admin/usuarios"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 p-3 px-4 rounded-2xl text-xs font-bold border transition-all active:scale-[0.98] ${
-                activeTab === "usuarios" 
-                  ? "bg-white/10 text-white border-white/5 shadow-sm" 
+              className={`flex items-center gap-3 p-3 px-4 rounded-2xl text-xs font-bold border transition-all active:scale-[0.98] ${activeTab === "usuarios"
+                  ? "bg-white/10 text-white border-white/5 shadow-sm"
                   : "text-slate-400 hover:text-white hover:bg-white/5 border-transparent"
-              }`}>
-              <Users size={16} className={activeTab === "usuarios" ? "text-brand-gold" : "text-slate-500"} /> 
+                }`}>
+              <Users size={16} className={activeTab === "usuarios" ? "text-brand-gold" : "text-slate-500"} />
               <span>Control de usuarios</span>
             </Link>
 
             <div className="pt-6 mt-6 border-t border-white/5">
               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-4">Navegación</p>
-              <Link href="/" 
+              <Link href="/"
                 className="flex items-center gap-3 p-3 px-4 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-white/5 border border-transparent transition-all">
-                <ExternalLink size={16} className="text-slate-500" /> 
+                <ExternalLink size={16} className="text-slate-500" />
                 <span>Página principal</span>
               </Link>
             </div>
@@ -111,11 +109,11 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
             <p className="text-xs font-black text-slate-200 truncate">{adminName}</p>
           </div>
           <form action={logout}>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-600 border border-red-550/15 text-red-400 hover:text-white py-3.5 rounded-2xl text-[9px] font-bold uppercase tracking-wider transition-all w-full cursor-pointer focus:outline-none focus:ring-0"
             >
-              <LogOut size={13} /> 
+              <LogOut size={13} />
               <span>Cerrar sesión</span>
             </button>
           </form>
@@ -127,9 +125,9 @@ export default function AdminLayout({ children, adminName, activeTab }: AdminLay
           <div className="flex items-center gap-4">
             <Image src={logoadventista} alt="IASD" width={28} height={28} className="object-contain" priority />
             <div className="h-5 w-[1px] bg-slate-200" />
-            <Image src={JA} alt="JA" width={28} height={28} className="object-contain" priority />
+            <Image src={JA} alt="JA" width={28} height={28} style={{ width: "auto", height: "auto" }} className="object-contain" priority />
           </div>
-          
+
           <div className="text-right hidden sm:block">
             <div className="text-[10px] font-black text-[#003366] uppercase italic">Ministerio Juvenil</div>
           </div>
