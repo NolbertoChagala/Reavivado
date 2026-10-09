@@ -3,27 +3,29 @@
 import prisma from "@/lib/db";
 import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
-import { assertAdmin } from "@/lib/session";
-import { Role } from "@prisma/client";
+import { assertAdmin, Role } from "@/lib/session";
+import { CrearUsuarioSchema, EliminarUsuarioSchema } from "@/lib/validations";
 
 export async function crearUsuario(prevState: any, formData: FormData) {
   try {
     await assertAdmin();
 
-    const nombre = (formData.get("nombre") as string)?.trim();
-    const email = (formData.get("email") as string)?.trim().toLowerCase();
-    const password = formData.get("password") as string;
-    
-    if (!nombre || !email || !password) {
-      return { success: false, message: "Todos los campos son obligatorios." };
-    }
+    const rawData = {
+      nombre: formData.get("nombre"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
 
-    if (password.length < 6) {
+    const validationResult = CrearUsuarioSchema.safeParse(rawData);
+
+    if (!validationResult.success) {
       return {
         success: false,
-        message: "La contraseña debe tener al menos 6 caracteres.",
+        message: validationResult.error.issues[0]?.message || "Datos de usuario inválidos.",
       };
     }
+
+    const { nombre, email, password } = validationResult.data;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -59,16 +61,25 @@ export async function eliminarUsuario(usuarioId: string) {
   try {
     const session = await assertAdmin();
 
-    if (session.userId === usuarioId) {
+    const validationResult = EliminarUsuarioSchema.safeParse(usuarioId);
+    if (!validationResult.success) {
       return {
         success: false,
-        message:
-          "Operación rechazada: No puedes eliminar tu propia cuenta activa.",
+        message: validationResult.error.issues[0]?.message || "Identificador inválido.",
+      };
+    }
+
+    const validId = validationResult.data;
+
+    if (session.userId === validId) {
+      return {
+        success: false,
+        message: "Operación rechazada: No puedes eliminar tu propia cuenta activa.",
       };
     }
 
     await prisma.usuario.delete({
-      where: { id: usuarioId },
+      where: { id: validId },
     });
 
     revalidatePath("/admin/usuarios");
