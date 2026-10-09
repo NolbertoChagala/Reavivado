@@ -23,23 +23,15 @@ export async function login(prevState: any, formData: FormData) {
     return { error: "Credenciales inválidas" };
   }
 
- const sessionToken = await createSessionToken({
-  userId: usuario.id,
-  role: usuario.rol as Role,
-});
+  const sessionToken = await createSessionToken({
+    userId: usuario.id,
+    role: usuario.rol as Role,
+  });
 
   const cookieStore = await cookies();
 
   cookieStore.set("auth_session", sessionToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, 
-    path: "/",
-  });
-
-  cookieStore.set("is_logged_in", "true", {
-    httpOnly: false,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7,
@@ -52,6 +44,5 @@ export async function login(prevState: any, formData: FormData) {
 export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete("auth_session");
-  cookieStore.delete("is_logged_in");
   redirect("/");
 }
