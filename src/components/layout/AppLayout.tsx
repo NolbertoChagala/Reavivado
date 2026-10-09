@@ -47,7 +47,7 @@ export default function AppLayout({
 
   return (
     <div className="min-h-screen bg-[#f4f6f9] flex flex-col md:flex-row text-slate-900 font-sans antialiased font-medium">
-      
+
       <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200/60 h-screen sticky top-0 shrink-0 justify-between select-none">
         <div className="flex flex-col">
           <div className="p-6 border-b border-slate-200/60 flex items-center gap-3">
@@ -66,18 +66,17 @@ export default function AppLayout({
             <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 py-2">
               Menú Principal
             </span>
-            
+
             {menuItems.map(({ id, label, icon }) => {
               const isActive = vistaActual === id && pathname === "/";
               return (
                 <button
                   key={id}
                   onClick={() => handleCambioVista(id)}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium btn-transition ${
-                    isActive
-                      ? "bg-red-50/50 text-brand-primary border-l-4 border-brand-gold font-semibold shadow-sm"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium btn-transition ${isActive
+                    ? "bg-red-50/50 text-brand-primary border-l-4 border-brand-gold font-semibold shadow-sm"
+                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className={`${isActive ? "text-brand-primary" : "text-slate-400"}`}>
@@ -96,26 +95,18 @@ export default function AppLayout({
               </span>
               <button
                 onClick={() => {
-                  const isLoggedIn = typeof window !== "undefined" && document.cookie.includes("is_logged_in=true");
-                  if (isLoggedIn) {
-                    router.push("/admin/puntos");
-                  } else {
-                    router.push("/login");
-                  }
+                  router.push("/admin/puntos");
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium btn-transition ${
-                  pathname.includes("/admin")
-                    ? "bg-red-50/50 text-brand-primary border-l-4 border-brand-gold font-semibold shadow-sm"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                }`}
+
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium btn-transition ${pathname.startsWith("/admin") ? "bg-red-50/50 text-brand-primary border-l-4 border-brand-gold font-semibold shadow-sm" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"}`}
               >
                 <div className="flex items-center gap-3">
-                  <span className={`${pathname.includes("/admin") ? "text-brand-primary" : "text-slate-400"}`}>
+                  <span className={`${pathname.startsWith("/admin") ? "text-brand-primary" : "text-slate-400"}`}>
                     <Settings size={18} />
                   </span>
                   <span>Panel Admin</span>
                 </div>
-                {pathname.includes("/admin") && <ChevronRight size={14} className="text-brand-gold" />}
+                {pathname.startsWith("/admin") && <ChevronRight size={14} className="text-brand-gold" />}
               </button>
             </div>
           </nav>
