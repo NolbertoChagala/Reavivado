@@ -30,4 +30,15 @@ export const CrearUsuarioSchema = z.object({
     .max(100, "La contraseña supera el tamaño máximo permitido."),
 });
 
+export const LoginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email("Ingresa un correo electrónico válido."),
+  password: z
+    .string()
+    .min(1, "La contraseña es requerida."),
+});
+
 export const EliminarUsuarioSchema = z.string().trim().min(1, "Identificador de usuario requerido.");
