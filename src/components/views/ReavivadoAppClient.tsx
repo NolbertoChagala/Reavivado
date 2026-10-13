@@ -2,7 +2,7 @@
 "use client";
 import { useState } from "react";
 import { AppLayout } from "@/components/layout";
-import DayView from "./DayView";
+import DayView from "./HomeView";
 import WeekView from "./WeekView";
 import MonthlyCalendar from "./Monthly_calendar";
 import { obtenerLecturaPorFecha, obtenerSemanaActual } from "@/lib/bibleLogic";
