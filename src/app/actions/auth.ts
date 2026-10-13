@@ -2,26 +2,57 @@
 
 import prisma from "@/lib/db";
 import bcrypt from "bcrypt";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createSessionToken, Role } from "@/lib/session";
+import { LoginSchema } from "@/lib/validations";
+import { checkRateLimit, recordFailedAttempt, resetRateLimit } from "@/lib/rate-limit";
 
 export async function login(prevState: any, formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const rawEmail = (formData.get("email") as string) || "";
+  const rawPassword = (formData.get("password") as string) || "";
+
+  const headerList = await headers();
+  const forwardedFor = headerList.get("x-forwarded-for");
+  const clientIp = forwardedFor ? forwardedFor.split(",")[0].trim() : "unknown-ip";
+  const rateLimitKey = `login:${clientIp}:${rawEmail.trim().toLowerCase()}`;
+
+  const { isBlocked, remainingMinutes } = checkRateLimit({ key: rateLimitKey });
+  if (isBlocked) {
+    return {
+      error: `Demasiados intentos fallidos. Por seguridad, espera ${remainingMinutes} minuto(s) antes de intentar nuevamente.`,
+    };
+  }
+
+  const validationResult = LoginSchema.safeParse({
+    email: rawEmail,
+    password: rawPassword,
+  });
+
+  if (!validationResult.success) {
+    return {
+      error: validationResult.error.issues[0]?.message || "Credenciales inválidas.",
+    };
+  }
+
+  const { email, password } = validationResult.data;
 
   const usuario = await prisma.usuario.findUnique({
     where: { email },
   });
 
   if (!usuario) {
-    return { error: "Credenciales inválidas" };
+    recordFailedAttempt({ key: rateLimitKey });
+    return { error: "Credenciales inválidas." };
   }
 
   const passwordMatch = await bcrypt.compare(password, usuario.password);
   if (!passwordMatch) {
-    return { error: "Credenciales inválidas" };
+    recordFailedAttempt({ key: rateLimitKey });
+    return { error: "Credenciales inválidas." };
   }
+
+  resetRateLimit(rateLimitKey);
 
   const sessionToken = await createSessionToken({
     userId: usuario.id,
