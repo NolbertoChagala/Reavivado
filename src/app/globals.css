@@ -1,16 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  /* Paleta Oficial de Jóvenes Adventistas (JA) */
-  --color-brand-primary: #d32f2d; /* Rojo JA (Redención) */
-  --color-brand-primary-hover: #b71c1c;
-  --color-brand-accent: #d32f2d;
+  /* Colores Oficiales de la Sociedad de Jóvenes Adventistas (JA) */
+  --color-ja-blue: #0d2b56;       /* Azul: Lealtad y Fidelidad constante */
+  --color-ja-blue-deep: #0a1931;  /* Azul noche profundo */
+  --color-ja-red: #b71c1c;        /* Rojo: Redención por la sangre de Cristo */
+  --color-ja-red-hover: #991b1b;
+  --color-ja-white: #ffffff;      /* Blanco: Pureza de vida y conducta */
+  --color-ja-gold: #d4af37;       /* Amarillo/Dorado: Excelencia de carácter */
+  --color-ja-gold-hover: #c5a059;
   
-  --color-brand-gold: #d4af37; /* Dorado (Liderazgo y Excelencia) */
-  --color-brand-gold-hover: #c5a059;
-  
-  --color-bg-base: #f4f6f9; /* Plata / Gris claro */
-  --color-bg-card: #ffffff; /* Blanco JA (Pureza) */
+  --color-brand-primary: #0d2b56;
+  --color-brand-accent: #b71c1c;
+  --color-brand-gold: #d4af37;
+  --color-bg-base: #f8fafc;
+  --color-bg-card: #ffffff;
   --color-border-subtle: #e2e8f0;
 }
 
@@ -67,6 +71,5 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(15, 23, 42, 0.16);
 }
-
 
 
