@@ -21,6 +21,6 @@ export const NAVIGATION_TABS = {
 } as const;
 
 export const VERSE_OF_DAY = {
-  text: "Lámpara es a mis pies tu palabra, y lumbrera a mi camino",
-  reference: "Salmos 119:105",
+  text: "Mira que te mando que te esfuerces y seas valiente; no temas ni desmayes, porque Jehová tu Dios estará contigo en dondequiera que vayas",
+  reference: "Josué 1:9",
 } as const;

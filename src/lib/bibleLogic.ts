@@ -36,8 +36,10 @@ export function obtenerSemanaActual(fecha: Date) {
     
     return dias.map(dia => {
         const lectura = obtenerLecturaPorFecha(dia);
+        const nombreBruto = format(dia, 'EEEE', { locale: es });
+        const diaNombre = nombreBruto.charAt(0).toUpperCase() + nombreBruto.slice(1).toLowerCase();
         return {
-            diaNombre: format(dia, 'EEEE', { locale: es }).toUpperCase(),
+            diaNombre,
             numeroDia: dia.getDate(),
             libro: lectura.libro,
             capitulo: lectura.capitulo,
