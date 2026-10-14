@@ -1,9 +1,25 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { Trophy, Clock, Calendar, User, BookOpen, Quote, MapPin, Music, Heart, Compass, Mic, Users, Sparkles, AlertTriangle } from "lucide-react";
+import React from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import {
+  BookOpen,
+  Target,
+  ArrowRight,
+  Users,
+  Calendar,
+  Shield,
+  Heart,
+  Compass,
+  Trophy,
+} from "lucide-react";
+import { VERSE_OF_DAY } from "@/constants/app";
+
+interface Lectura {
+  libro: string;
+  capitulo: number;
+}
 
 interface Unidad {
   nombre: string;
@@ -11,270 +27,361 @@ interface Unidad {
   puntos: number;
 }
 
-interface Lectura {
-  libro: string;
-  capitulo: number;
-}
-
 interface DayViewProps {
   hoy: Date;
   lecturaHoy: Lectura;
+  /** Texto oficial del Voto JA */
+  voto?: string;
+  fondoUrl?: string;
   unidades?: Unidad[];
+  onCambiarVista?: (vista: "dia" | "semana" | "mes") => void;
 }
 
-export default function DayView({ hoy, lecturaHoy, unidades = [] }: DayViewProps) {
-  // Obtener el líder de unidades
-  const liderPuntos = useMemo(() => {
-    if (unidades.length === 0) return { nombre: "Sin Datos", puntos: 0, lider: "---" };
-    return [...unidades].sort((a, b) => b.puntos - a.puntos)[0];
-  }, [unidades]);
+/* ───────── Configuración ───────── */
+const CULTO_JOVEN = "4:30 – 6:20 p. m.";
+const VOTO_JA_POR_DEFECTO =
+  "Por amor al Señor Jesús, prometo tomar parte activa en la obra de los Ministerios Juveniles Adventistas, haciendo cuanto pueda para ayudar a otros, y para terminar la obra del evangelio en todo el mundo";
 
-  const programaHoy = [
-    { hora: "17:00", actividad: "Ejercicio de Canto", responsable: "Dir. de Canto" },
-    { hora: "17:10", actividad: "Bienvenida", responsable: "---" },
-    { hora: "17:15", actividad: "Canto Tema e Ideales", responsable: "---" },
-    { hora: "17:20", actividad: "Lectura Bíblica", responsable: "---" },
-    { hora: "17:25", actividad: "Oración", responsable: "---" },
-    { hora: "17:30", actividad: "Tema / Actividad Especial", responsable: "Tema JA" },
-    { hora: "18:00", actividad: "Dinámica Grupal", responsable: "---" },
-    { hora: "18:10", actividad: "Pase de lista", responsable: "---" },
-    { hora: "18:15", actividad: "Conexión Bíblica", responsable: "---" },
-    { hora: "18:30", actividad: "Bando de Oración y Cierre", responsable: "---" },
-  ];
+/* ───────── Adorno de Excelencia JA (Dorado) ───────── */
+function AdornoJA() {
+  return (
+    <div className="flex items-center justify-center gap-3" aria-hidden>
+      <span className="h-px w-16 md:w-28 bg-amber-400/50" />
+      <span className="h-1.5 w-1.5 rotate-45 bg-amber-400 shadow-xs" />
+      <span className="h-px w-16 md:w-28 bg-amber-400/50" />
+    </div>
+  );
+}
 
-  const getIconForActividad = (actividad: string) => {
-    const act = actividad.toLowerCase();
-    if (act.includes("canto")) return <Music size={14} className="text-brand-primary animate-pulse" />;
-    if (act.includes("bienvenida")) return <Heart size={14} className="text-red-500" />;
-    if (act.includes("ideales")) return <Compass size={14} className="text-amber-500" />;
-    if (act.includes("lectura")) return <BookOpen size={14} className="text-brand-primary" />;
-    if (act.includes("oración")) return <Sparkles size={14} className="text-purple-500" />;
-    if (act.includes("tema") || act.includes("actividad")) return <Mic size={14} className="text-blue-500" />;
-    if (act.includes("dinámica")) return <Trophy size={14} className="text-brand-gold" />;
-    if (act.includes("pase") || act.includes("lista")) return <Users size={14} className="text-slate-500" />;
-    if (act.includes("conexión")) return <Sparkles size={14} className="text-brand-gold" />;
-    return <Clock size={14} className="text-slate-400" />;
-  };
-
-  const saludoDia = format(hoy, "EEEE", { locale: es });
+export default function DayView({
+  hoy,
+  lecturaHoy,
+  voto = VOTO_JA_POR_DEFECTO,
+  onCambiarVista,
+}: DayViewProps) {
+  const dia = format(hoy, "EEEE", { locale: es });
+  const diaCapitalizado = dia.charAt(0).toUpperCase() + dia.slice(1);
+  const fechaLarga = format(hoy, "d 'de' MMMM 'de' yyyy", { locale: es });
 
   return (
-    <div className="w-full select-none">
+    <div className="w-full select-none bg-slate-50 font-sans text-slate-800">
+      {/* ════════ I. CABECERA INSTITUCIONAL JA: AZUL, ROJO, BLANCO Y DORADO ════════ */}
+      <header
+        className="relative bg-[#0a1931] bg-cover bg-center text-white w-full overflow-hidden"
+        style={{
+          backgroundImage: `url('/img/bg_home.jpg')`,
+          backgroundPosition: "center 38%",
+        }}
+      >
+        {/* Degradado armónico oficial JA: Azul Lealtad base con auras suaves de Rojo Redención y Dorado Excelencia */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1931]/80 via-[#0d2b56]/60 to-[#0a1931]/90" />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            background:
+              "radial-gradient(circle at 80% 25%, rgba(183, 28, 28, 0.45) 0%, transparent 60%), radial-gradient(circle at 20% 75%, rgba(212, 175, 55, 0.3) 0%, transparent 50%)",
+          }}
+        />
 
-      {/* CONTENEDOR INTEGRAL DE PANTALLA ÚNICA */}
-      <div className="bg-white border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+        {/* Contenido amplio y espacioso de la cabecera (SIN cajas que tapen o corten la Biblia en la foto) */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-24 md:pb-32 lg:pt-28 lg:pb-36 text-center">
+          <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white font-serif drop-shadow-md">
+              Sistema de gestión JA
+            </h1>
 
-        {/* COLUMNA IZQUIERDA: BIENVENIDA, ALERTA Y TIMELINE */}
-        <div className="lg:col-span-7 p-6 md:p-8 flex flex-col space-y-6">
+            <div className="pt-0.5 sm:pt-1">
+              <AdornoJA />
+            </div>
 
-          {/* Cabecera interna */}
-          <div className="space-y-1 text-left">
-            <div className="flex items-center gap-1.5 text-brand-primary">
-              <MapPin size={12} className="shrink-0" />
-              <span className="text-[8px] font-bold uppercase tracking-wider">
-                Sede Cancún • Villas Otoch 4
+            <p className="text-sm sm:text-lg md:text-xl text-amber-300 font-medium tracking-wide">
+              Sociedad de Jóvenes Adventistas
+            </p>
+
+            <p className="text-xs sm:text-sm md:text-base text-slate-100 max-w-2xl mx-auto leading-relaxed drop-shadow-xs px-2 sm:px-0">
+              Plataforma para consultar el cronograma de lecturas y llevar el registro de puntos de cada grupo.
+            </p>
+
+            <div className="pt-1 sm:pt-2">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3.5 py-1 sm:px-5 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-white backdrop-blur-md shadow-sm">
+                <span>{diaCapitalizado}, {fechaLarga}</span>
               </span>
             </div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-800 capitalize leading-tight">
-              ¡Feliz {saludoDia}!
-            </h2>
-            <span className="text-[10px] text-slate-400 font-bold block mt-1">
-              {format(hoy, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es })}
-            </span>
           </div>
-
-          {/* Banner de Tolerancia integrado */}
-          <div className="p-3.5 bg-amber-50/50 border border-brand-gold/15 rounded-2xl flex items-start gap-2.5">
-            <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
-            <div className="text-left">
-              <span className="text-[8px] font-black text-amber-800 uppercase tracking-wide block">Tolerancia de asistencia</span>
-              <p className="text-[9px] text-amber-800 leading-normal font-semibold mt-0.5">
-                Margen de <strong>10 minutos</strong> para el registro en unidades (17:00 - 17:10 hrs). Preludio de canto inicia a las 17:10 hrs.
-              </p>
-            </div>
-          </div>
-
-          {/* Línea de tiempo */}
-          <div className="space-y-4 flex-1 flex flex-col min-h-0">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Itinerario oficial</span>
-              <span className="text-[8px] bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded-lg uppercase">
-                17:00 HRS
-              </span>
-            </div>
-
-            {/* Listado de Actividades */}
-            <div className="relative pl-5 border-l border-slate-100 space-y-2">
-              {programaHoy.map((p, i) => (
-                <div key={i} className="relative group">
-                  {/* Punto del timeline */}
-                  <div className="absolute -left-[25px] top-[14px] w-2.5 h-2.5 rounded-full bg-white border-2 border-brand-primary flex items-center justify-center group-hover:bg-brand-primary transition-all">
-                    <div className="w-0.5 h-0.5 rounded-full bg-brand-primary group-hover:bg-white" />
-                  </div>
-
-                  {/* Actividad */}
-                  <div className="flex items-center justify-between gap-3 p-2 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100/50 transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="p-1.5 bg-slate-50 border border-slate-100 rounded-lg text-slate-550 shrink-0">
-                        {getIconForActividad(p.actividad)}
-                      </div>
-                      <div className="text-left">
-                        <span className="text-[8px] font-bold text-brand-primary uppercase block leading-none mb-0.5">
-                          {p.hora}
-                        </span>
-                        <h4 className="text-xs font-bold text-slate-800 leading-tight">
-                          {p.actividad}
-                        </h4>
-                      </div>
-                    </div>
-
-                    {p.responsable !== "---" && (
-                      <span className="text-[8px] bg-slate-50 text-slate-550 border border-slate-200/40 px-2 py-0.5 rounded-md font-bold uppercase shrink-0">
-                        {p.responsable}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
         </div>
+      </header>
 
-        {/* COLUMNA DERECHA: ESTADÍSTICAS, LIDERAZGO, IDEALES Y DIRECCIÓN */}
-        <div className="lg:col-span-5 bg-slate-50/30 lg:border-l lg:border-slate-100 p-6 md:p-8 flex flex-col justify-between gap-5">
-
-          {/* 1. LECTURA BÍBLICA DIARIA */}
-          <div className="space-y-2.5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <BookOpen size={13} className="text-brand-primary" />
-                <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Lectura de hoy</span>
-              </div>
-              <span className="text-[8px] bg-red-50 text-brand-primary border border-red-100/50 font-bold px-2 py-0.5 rounded-md uppercase">
-                RPSP
-              </span>
-            </div>
-            <div className="text-left p-3.5 bg-white border border-slate-200/60 rounded-2xl shadow-xs">
-              <h3 className="text-base font-black text-slate-800 leading-none">
-                {lecturaHoy.libro}
-              </h3>
-              <p className="text-[11px] font-black text-brand-gold mt-1.5 leading-none">
-                Capítulo {lecturaHoy.capitulo}
-              </p>
-            </div>
-          </div>
-
-          {/* 2. LIBRO DE LA CONEXIÓN BÍBLICA */}
-          <div className="space-y-2.5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <Sparkles size={13} className="text-brand-gold" />
-                <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Conexión bíblica</span>
-              </div>
-              <span className="text-[8px] bg-amber-50 text-brand-gold border border-brand-gold/15 font-bold px-2 py-0.5 rounded-md uppercase">
-                Estudio 2026
-              </span>
-            </div>
-            <div className="text-left p-3.5 bg-white border border-slate-200/60 rounded-2xl shadow-xs">
-              <h3 className="text-base font-black text-slate-800 leading-none">
-                Evangelio de Salmos
-              </h3>
-              <p className="text-[10px] text-slate-400 font-bold mt-1.5 leading-none">
-                Libro oficial de estudio juvenil
-              </p>
-            </div>
-          </div>
-
-          {/* 3. LÍDER DE LA SEMANA */}
-          <div className="space-y-2.5">
-            <div className="flex items-center justify-between select-none">
-              <div className="flex items-center gap-1.5">
-                <Trophy size={13} className="text-brand-gold" />
-                <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Líder de la semana</span>
-              </div>
-              <span className="text-[8px] bg-amber-50 text-brand-gold border border-brand-gold/15 font-bold px-2 py-0.5 rounded-md uppercase">
-                Top 1
-              </span>
+      {/* ════════ II. PUENTE DE INDICADORES FLOTANTE (SIN CORTAR LA IMAGEN) ════════ */}
+      <div className="relative -mt-10 sm:-mt-14 md:-mt-16 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-10 z-20">
+        <div className="rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-md shadow-xl p-2 sm:p-4">
+          <dl className="grid grid-cols-1 md:grid-cols-3 divide-y divide-slate-100 md:divide-x md:divide-y-0">
+            {/* 1. Programa general (Horario sabatino) */}
+            <div className="p-3 sm:p-5 text-center">
+              <dt className="text-[11px] sm:text-xs font-semibold text-slate-500">Programa general JA</dt>
+              <dd className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-bold text-[#0d2b56]">{CULTO_JOVEN}</dd>
+              <dd className="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5 sm:mt-1">Culto joven sabatino</dd>
             </div>
 
-            <div className="p-3 bg-white border border-slate-200/60 rounded-2xl flex items-center justify-between select-none">
-              <div className="flex items-center gap-3">
-                <div className="w-7 h-7 bg-amber-50 border border-brand-gold/20 rounded-xl flex items-center justify-center shrink-0 text-brand-gold">
-                  <Trophy size={14} />
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-xs font-black text-slate-800 truncate max-w-[140px]">{liderPuntos.nombre}</span>
-                  <span className="text-[8px] text-slate-400 font-bold leading-none mt-0.5">Líder: {liderPuntos.lider}</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-end">
-                <span className="text-xs font-black text-slate-800">
-                  {new Intl.NumberFormat("es-MX").format(liderPuntos.puntos)}
-                </span>
-                <span className="text-[7px] text-slate-405 font-bold uppercase tracking-wider mt-0.5">puntos</span>
-              </div>
-            </div>
-          </div>
-
-          {/* 4. IDEALES JA */}
-          <div className="space-y-2.5">
-            <div className="flex items-center gap-1.5 select-none">
-              <Compass size={13} className="text-brand-primary" />
-              <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Ideales JA</span>
-            </div>
-            <div className="p-3.5 bg-white border border-slate-200/60 rounded-2xl space-y-2.5 text-left">
-              <div className="space-y-0.5">
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-wider block">Blanco</span>
-                <p className="text-[10px] font-bold text-slate-700 leading-normal">
-                  "El mensaje del advenimiento a todo el mundo en mi generación."
-                </p>
-              </div>
-              <div className="space-y-0.5 pt-2 border-t border-slate-100">
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-wider block">Lema</span>
-                <p className="text-[10px] font-bold text-slate-700 leading-normal">
-                  "El amor de Cristo nos constriñe."
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* 5. UBICACIÓN Y SEDE DE LA IGLESIA */}
-          <div className="pt-4 border-t border-slate-100 space-y-3.5">
-            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-100 select-none">
-              <MapPin size={14} className="text-brand-primary" />
-              <span className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Ubicación y sede</span>
-            </div>
-            <div className="space-y-1 text-left select-none">
-              <h5 className="text-[10px] font-black text-slate-800">Iglesia Adventista del Séptimo Día</h5>
-              <p className="text-[9.5px] text-slate-450 leading-normal font-semibold">
-                Sede Villas Otoch 4, Cancún Quintana Roo.<br />
-                Asociación de Quintana Roo • Unión Mexicana del Sureste.
-              </p>
+            {/* 2. Meta diaria de estudio */}
+            <div className="p-3 sm:p-5 text-center">
+              <dt className="text-[11px] sm:text-xs font-semibold text-slate-500">Meta diaria</dt>
+              <dd className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-bold text-[#0d2b56]">
+                1 capítulo al día
+              </dd>
+              <dd className="text-[11px] sm:text-xs text-amber-700 font-semibold mt-0.5 sm:mt-1">Reavivados por su palabra</dd>
             </div>
 
-            <div className="pt-2 border-t border-slate-100 space-y-1.5 select-none">
-              <div className="flex justify-between text-[9px] font-semibold text-slate-400 text-left">
-                <div className="flex flex-col">
-                  <span className="font-bold text-slate-700">Perla Ivon Gomez Cruz</span>
-                  <span>Director</span>
-                </div>
-                <div className="flex flex-col text-right">
-                  <span className="font-bold text-slate-700">Nolberto Coto Chagala</span>
-                  <span>Subdirector</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between text-[8px] text-slate-400 font-bold uppercase mt-1">
-                <span>Sociedad de Jóvenes</span>
-                <span className="text-brand-primary">JA 2026</span>
-              </div>
+            {/* 3. Ciclo de preparación */}
+            <div className="p-3 sm:p-5 text-center">
+              <dt className="text-[11px] sm:text-xs font-semibold text-slate-500">Ciclo de preparación</dt>
+              <dd className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-bold text-[#0d2b56]">Domingo a sábado</dd>
+              <dd className="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5 sm:mt-1">Preparación continua</dd>
             </div>
-          </div>
-
+          </dl>
         </div>
-
       </div>
 
+      {/* ════════ II. ¿CUÁL ES EL PROPÓSITO DE ESTE SISTEMA? (FULL-WIDTH SLATE-50) ════════ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10 md:py-14">
+        <div className="text-center space-y-1.5 mb-10">
+          <p className="text-xs font-semibold text-slate-500">
+            Información general
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 font-serif">
+            ¿Cuál es el propósito de este sistema?
+          </h2>
+          <div className="pt-1">
+            <AdornoJA />
+          </div>
+          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed pt-1">
+            Su objetivo es organizar el cronograma de lecturas y llevar el registro de puntos por cada grupo:
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {/* 1. Registro de puntos */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs hover:border-blue-300 hover:shadow-sm transition-all flex flex-col justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-200/80 p-2.5 text-[#0d2b56] mb-4">
+                <Trophy size={18} />
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">
+                Registro de puntos
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                Se registran los puntos obtenidos por cada grupo en la conexión bíblica del culto joven.
+              </p>
+            </div>
+            {onCambiarVista && (
+              <div className="pt-4 mt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => onCambiarVista("semana")}
+                  className="inline-flex items-center gap-2 text-xs font-bold text-[#0d2b56] hover:text-[#091f3e] transition-colors cursor-pointer group"
+                >
+                  <span>Ver tabla de posiciones</span>
+                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* 2. Calendario de lectura */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-xs hover:border-amber-300 hover:shadow-sm transition-all flex flex-col justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-xl bg-amber-50 border border-amber-300/80 p-2.5 text-amber-900 mb-4">
+                <Calendar size={18} />
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">
+                Calendario de lecturas
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                Se consulta el cronograma de lecturas para saber qué cita bíblica corresponde a cada día.
+              </p>
+            </div>
+            {onCambiarVista && (
+              <div className="pt-4 mt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => onCambiarVista("mes")}
+                  className="inline-flex items-center gap-2 text-xs font-bold text-amber-800 hover:text-amber-900 transition-colors cursor-pointer group"
+                >
+                  <span>Ver calendario de lecturas</span>
+                  <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════ III. LECTURA DE HOY (CENTRO DEVOCIONAL FULL-WIDTH BLANCO) ════════ */}
+      <section className="border-t border-slate-200/80 bg-white py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="text-center space-y-1.5 mb-8">
+            <p className="text-xs font-semibold text-slate-500">
+              Lectura bíblica diaria
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 font-serif">
+              Lectura de hoy
+            </h2>
+            <div className="pt-1">
+              <AdornoJA />
+            </div>
+          </div>
+
+          <div className="max-w-3xl mx-auto rounded-3xl border border-slate-200/90 bg-slate-50/70 p-6 sm:p-10 shadow-xs text-center space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200 px-4 py-1.5 text-xs font-semibold text-[#0d2b56]">
+              <BookOpen size={14} className="text-[#0d2b56]" />
+              <span>Reavivados por su palabra · Capítulo asignado</span>
+            </div>
+
+            <div>
+              <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mt-1 font-serif tracking-tight">
+                {lecturaHoy.libro} capítulo {lecturaHoy.capitulo}
+              </h3>
+            </div>
+
+            {/* Versículo de inspiración del día (formato compacto) */}
+            <div className="rounded-xl bg-white border border-slate-200/90 px-4 py-3 sm:px-6 sm:py-4 text-center max-w-xl mx-auto shadow-2xs">
+              <p className="text-xs sm:text-sm italic text-slate-700 font-serif leading-relaxed">
+                «{VERSE_OF_DAY.text}»
+              </p>
+              <span className="block mt-1.5 text-[11px] sm:text-xs font-bold text-[#b71c1c]">
+                {VERSE_OF_DAY.reference}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════ IV. IDEALES DE LOS JÓVENES ADVENTISTAS (FULL-WIDTH SLATE-50) ════════ */}
+      <section className="border-t border-slate-200/80 bg-slate-50/80 py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="text-center space-y-1.5 mb-10">
+            <p className="text-xs font-semibold text-slate-500">
+              Identidad y principios espirituales
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 font-serif">
+              Ideales JA
+            </h2>
+            <div className="pt-1">
+              <AdornoJA />
+            </div>
+          </div>
+
+          {/* 1. Voto JA (Tarjeta destacada superior) */}
+          <div className="rounded-2xl border-2 border-amber-300/80 bg-white p-6 sm:p-8 shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-0 mb-3.5">
+                <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 border border-amber-300 px-3.5 py-1 text-xs font-bold text-amber-900 w-fit">
+                  <Shield size={14} />
+                  <span>1. Voto JA</span>
+                </div>
+                <span className="text-[11px] sm:text-xs text-slate-400 font-medium">Compromiso personal de consagración</span>
+              </div>
+              <p className="text-base sm:text-lg italic font-serif text-slate-800 leading-relaxed">
+                «{voto}»
+              </p>
+            </div>
+            <p className="mt-5 pt-3 border-t border-slate-100 text-xs text-slate-500">
+              Recitado con devoción en cada culto de la tarde.
+            </p>
+          </div>
+
+          {/* Fila intermedia: 2. Blanco, 3. Lema y 4. Misión en 3 columnas */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* 2. Blanco JA */}
+            <div className="rounded-2xl border border-blue-200/80 bg-white p-6 sm:p-7 shadow-xs flex flex-col justify-between hover:border-blue-300 transition-all">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200 px-3 py-1 text-xs font-bold text-[#0d2b56] mb-3.5">
+                  <Target size={14} />
+                  <span>2. Blanco JA</span>
+                </div>
+                <p className="text-base sm:text-lg italic font-serif text-slate-800 leading-relaxed">
+                  «El mensaje del advenimiento a todo el mundo en mi generación»
+                </p>
+              </div>
+              <p className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 font-medium">
+                Propósito de evangelización y testimonio global
+              </p>
+            </div>
+
+            {/* 3. Lema JA */}
+            <div className="rounded-2xl border border-red-200/80 bg-white p-6 sm:p-7 shadow-xs flex flex-col justify-between hover:border-red-300 transition-all">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-red-50 border border-red-200 px-3 py-1 text-xs font-bold text-[#b71c1c] mb-3.5">
+                  <Heart size={14} />
+                  <span>3. Lema JA</span>
+                </div>
+                <p className="text-base sm:text-lg italic font-serif text-slate-800 leading-relaxed">
+                  «El amor de Cristo me motiva»
+                </p>
+              </div>
+              <p className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 font-medium">
+                El motor espiritual de nuestra vida cristiana · 2 Corintios 5:14
+              </p>
+            </div>
+
+            {/* 4. Misión JA */}
+            <div className="rounded-2xl border border-amber-200/80 bg-white p-6 sm:p-7 shadow-xs flex flex-col justify-between hover:border-amber-300 transition-all">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 border border-amber-300 px-3 py-1 text-xs font-bold text-amber-900 mb-3.5">
+                  <Compass size={14} />
+                  <span>4. Misión JA</span>
+                </div>
+                <p className="text-base sm:text-lg italic font-serif text-slate-800 leading-relaxed">
+                  «Guiar a los jóvenes a una experiencia con Jesús y ayudarlos a aceptar su llamado al discipulado»
+                </p>
+              </div>
+              <p className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 font-medium">
+                El llamado al discipulado activo de cada joven
+              </p>
+            </div>
+          </div>
+
+          {/* 5. Voto a la Biblia (Tarjeta destacada inferior) */}
+          <div className="mt-6 rounded-2xl border-2 border-blue-200 bg-white p-6 sm:p-8 shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-0 mb-3.5">
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200 px-3.5 py-1 text-xs font-bold text-[#0d2b56] w-fit">
+                  <BookOpen size={14} />
+                  <span>5. Voto a la Biblia</span>
+                </div>
+                <span className="text-[11px] sm:text-xs text-slate-400 font-medium">Fidelidad a la santa palabra de Dios</span>
+              </div>
+              <p className="text-base sm:text-lg italic font-serif text-slate-800 leading-relaxed">
+                «Prometo lealtad a la Biblia, la santa palabra de Dios; haré de ella una lámpara a mis pies y una luz a mi camino; y guardaré sus palabras en mi corazón para no pecar contra Dios»
+              </p>
+            </div>
+            <p className="mt-5 pt-3 border-t border-slate-100 text-xs text-slate-500">
+              Cimiento espiritual y lealtad a la palabra de Dios · Salmos 119:105
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════ V. LIDERAZGO JUVENIL ════════ */}
+      <footer className="relative overflow-hidden bg-[#0a1931] px-6 py-10 text-white md:px-12 border-t border-slate-900">
+        <div className="relative max-w-4xl mx-auto text-center">
+          <p className="text-xs font-semibold text-slate-400">Liderazgo juvenil</p>
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div>
+              <p className="text-base font-bold text-white font-serif">Perla Ivon Gomez Cruz</p>
+              <div className="mx-auto mt-1.5 h-px w-28 bg-amber-400/50" />
+              <p className="mt-1 text-xs text-slate-400">Director</p>
+            </div>
+            <div>
+              <p className="text-base font-bold text-white font-serif">Nolberto Coto Chagala</p>
+              <div className="mx-auto mt-1.5 h-px w-28 bg-amber-400/50" />
+              <p className="mt-1 text-xs text-slate-400">Subdirector</p>
+            </div>
+          </div>
+          <p className="mt-8 text-xs text-slate-400">
+            JA 2026 · Asociación de Quintana Roo · Unión Mexicana del Sureste
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

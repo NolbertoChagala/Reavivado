@@ -28,34 +28,41 @@ export default function ReavivadoAppClient({ unidades }: Props) {
   const lecturaHoy = obtenerLecturaPorFecha(fechaActiva);
   const semana = obtenerSemanaActual(fechaActiva);
 
+  const handleCambiarVista = (nuevaVista: "dia" | "semana" | "mes") => {
+    if (nuevaVista === vista) return;
+    setVista(nuevaVista);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  };
+
   return (
-    <AppLayout vistaActual={vista} onChangeVista={(nuevaVista) => {
-      setVista(nuevaVista);
-    }}>
-      {vista === "dia" && (
+    <AppLayout vistaActual={vista} onChangeVista={handleCambiarVista}>
+      <div className={vista === "dia" ? "block" : "hidden"}>
         <DayView
           hoy={fechaActiva}
           lecturaHoy={lecturaHoy}
           unidades={unidades}
+          onCambiarVista={handleCambiarVista}
         />
-      )}
-      {vista === "semana" && (
+      </div>
+      <div className={vista === "semana" ? "block" : "hidden"}>
         <WeekView
           hoy={fechaActiva}
           semana={semana}
           refDiaActual={refDiaActual}
           unidades={unidades}
         />
-      )}
-      {vista === "mes" && (
+      </div>
+      <div className={vista === "mes" ? "block" : "hidden"}>
         <MonthlyCalendar 
           fecha={fechaActiva} 
           onSeleccionarFecha={(fecha) => {
             setFechaSeleccionada(fecha);
-            setVista("dia");
+            handleCambiarVista("dia");
           }}
         />
-      )}
+      </div>
     </AppLayout>
   );
 }
