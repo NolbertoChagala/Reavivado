@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
 
   if (pathname === "/login") {
     if (isAuth) {
-      const adminUrl = new URL("/admin/puntos", request.url);
+      const adminUrl = new URL("/admin", request.url);
       return NextResponse.redirect(adminUrl);
     }
   }
