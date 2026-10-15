@@ -26,22 +26,43 @@ export async function registrarPuntaje(prevState: any, formData: FormData) {
 
     const { unidadId, cantidad, tipoOperacion } = validationResult.data;
 
+    const unidad = await prisma.unidad.findUnique({ where: { id: unidadId } });
+    if (!unidad) {
+      return { success: false, message: "Unidad no encontrada en el sistema." };
+    }
+
+    let nuevoPuntaje = unidad.puntos;
+    let mensaje = "";
+
     if (tipoOperacion === "fijar") {
+      nuevoPuntaje = Math.max(0, cantidad);
       await prisma.unidad.update({
         where: { id: unidadId },
-        data: { puntos: Math.max(0, cantidad) },
+        data: { puntos: nuevoPuntaje },
       });
+      mensaje = `Puntaje actualizado: ${unidad.nombreGrupo} ahora tiene ${nuevoPuntaje.toLocaleString()} pts.`;
+    } else if (tipoOperacion === "restar") {
+      const cantidadAbs = Math.abs(cantidad);
+      nuevoPuntaje = Math.max(0, (unidad.puntos || 0) - cantidadAbs);
+      await prisma.unidad.update({
+        where: { id: unidadId },
+        data: { puntos: nuevoPuntaje },
+      });
+      mensaje = `Se descontaron -${cantidadAbs.toLocaleString()} pts a ${unidad.nombreGrupo}. Nuevo total: ${nuevoPuntaje.toLocaleString()} pts.`;
     } else {
+      const cantidadAbs = Math.abs(cantidad);
+      nuevoPuntaje = (unidad.puntos || 0) + cantidadAbs;
       await prisma.unidad.update({
         where: { id: unidadId },
-        data: { puntos: { increment: cantidad } },
+        data: { puntos: nuevoPuntaje },
       });
+      mensaje = `Se sumaron +${cantidadAbs.toLocaleString()} pts a ${unidad.nombreGrupo}. Nuevo total: ${nuevoPuntaje.toLocaleString()} pts.`;
     }
 
     revalidatePath("/");
     revalidatePath("/admin/puntos");
 
-    return { success: true, message: "¡Puntos actualizados correctamente!" };
+    return { success: true, message: mensaje };
   } catch (error: any) {
     console.error("Error al actualizar puntos:", error);
     return {
