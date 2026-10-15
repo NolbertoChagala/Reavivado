@@ -8,7 +8,7 @@ export const RegistrarPuntajeSchema = z.object({
     .refine((val) => val >= -10000 && val <= 10000, {
       message: "La cantidad está fuera del rango permitido.",
     }),
-  tipoOperacion: z.enum(["fijar", "sumar"], {
+  tipoOperacion: z.enum(["fijar", "sumar", "restar"], {
     message: "Tipo de operación no válido.",
   }),
 });

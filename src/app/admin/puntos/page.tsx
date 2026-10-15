@@ -12,14 +12,15 @@ export default async function AdminPuntosPage() {
     redirect("/login");
   }
 
-  const [admin, unidades] = await Promise.all([
+  const [admin, unidades, usuarios] = await Promise.all([
     prisma.usuario.findUnique({ where: { id: session.userId } }),
     prisma.unidad.findMany({ orderBy: { puntos: "desc" } }),
+    prisma.usuario.findMany({ orderBy: { nombre: "asc" } }),
   ]);
 
   return (
     <AdminLayout adminName={admin?.nombre} activeTab="puntos">
-      <PointsManagement unidades={unidades} />
+      <PointsManagement unidades={unidades} adminName={admin?.nombre} />
     </AdminLayout>
   );
 }

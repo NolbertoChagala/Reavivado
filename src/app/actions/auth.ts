@@ -69,7 +69,7 @@ export async function login(prevState: any, formData: FormData) {
     path: "/",
   });
 
-  redirect("/admin/puntos");
+  redirect("/admin");
 }
 
 export async function logout() {

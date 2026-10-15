@@ -1,32 +1,36 @@
 "use client";
 
-import { APP_NAME, APP_SUBTITLE } from "@/constants/app";
+import { useEffect, useState } from "react";
 import { BrandLogo } from "./BrandLogo";
 
-export default function Header() {
-  return (
-    <header className="bg-white border-b border-slate-200/60 sticky top-0 z-50 transition-all text-slate-900 select-none">
-      <div className="px-5 py-3 flex items-center justify-between">
-        
-        <div className="flex items-center gap-3">
-          <BrandLogo size={26} />
-          
-          <div className="flex flex-col">
-            <h1 className="text-sm font-black text-slate-900 tracking-tight uppercase leading-none">
-              {APP_NAME}
-            </h1>
-            <p className="text-[8px] font-semibold text-brand-primary uppercase tracking-widest leading-none mt-1">
-              {APP_SUBTITLE}
-            </p>
-          </div>
-        </div>
+interface HeaderProps {
+  scrolled?: boolean;
+}
 
-        <div className="text-right">
-          <span className="text-[9px] font-bold text-brand-primary uppercase tracking-wider">
-            Villas Otoch 4
-          </span>
-        </div>
-      </div>
+export default function Header({ scrolled: externalScrolled }: HeaderProps) {
+  const [internalScrolled, setInternalScrolled] = useState(false);
+
+  useEffect(() => {
+    if (externalScrolled !== undefined) return;
+    const handleScroll = () => {
+      setInternalScrolled(window.scrollY > 25);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [externalScrolled]);
+
+  const isScrolled = externalScrolled !== undefined ? externalScrolled : internalScrolled;
+
+  return (
+    <header
+      className={`fixed top-3 left-3.5 z-50 transition-all duration-300 select-none rounded-2xl px-3 py-1.5 flex items-center ${
+        isScrolled
+          ? "bg-white/95 backdrop-blur-2xl border border-slate-300/90 shadow-[0_12px_28px_rgba(13,43,86,0.16)] ring-1 ring-slate-900/10"
+          : "bg-transparent border-transparent shadow-none ring-0"
+      }`}
+    >
+      <BrandLogo size={28} isDark={!isScrolled} />
     </header>
   );
 }
