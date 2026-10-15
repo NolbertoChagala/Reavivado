@@ -127,36 +127,36 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
       </header>
 
       {/* ════════ II. PUENTE DE INDICADORES FLOTANTE (SIN CORTAR LA IMAGEN) ════════ */}
-      <div className="relative -mt-10 sm:-mt-14 md:-mt-16 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-10 z-20">
-        <div className="rounded-2xl border border-slate-200/90 bg-white/95 backdrop-blur-md shadow-xl p-2 sm:p-4">
-          <dl className="grid grid-cols-1 md:grid-cols-3 divide-y divide-slate-100 md:divide-x md:divide-y-0">
+      <div className="relative -mt-10 sm:-mt-14 md:-mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 z-20">
+        <div className="rounded-2xl border border-slate-300 bg-white shadow-xl p-2 sm:p-4">
+          <dl className="grid grid-cols-1 md:grid-cols-3 divide-y divide-slate-300 md:divide-y-0 md:divide-x">
             {/* 1. Unidad Líder (Dorado JA) */}
             <div className="p-3 sm:p-5 text-center">
-              <dt className="text-[11px] sm:text-xs font-semibold text-slate-500">Unidad líder actual</dt>
-              <dd className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-bold text-[#0d2b56]">
+              <dt className="text-xs font-semibold text-slate-500">Unidad líder actual</dt>
+              <dd className="mt-1 text-xl sm:text-2xl font-bold text-[#0d2b56]">
                 {liderActual ? liderActual.nombre : "Sin registrar"}
               </dd>
-              <dd className="text-[11px] sm:text-xs text-amber-700 font-semibold mt-0.5 sm:mt-1">
+              <dd className="text-xs text-amber-700 font-semibold mt-1">
                 {liderActual ? `${liderActual.puntos.toLocaleString()} pts` : "0 pts"}
               </dd>
             </div>
 
             {/* 2. En competencia (Azul JA) */}
             <div className="p-3 sm:p-5 text-center">
-              <dt className="text-[11px] sm:text-xs font-semibold text-slate-500">En competencia</dt>
-              <dd className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-bold text-[#0d2b56]">
+              <dt className="text-xs font-semibold text-slate-500">En competencia</dt>
+              <dd className="mt-1 text-xl sm:text-2xl font-bold text-[#0d2b56]">
                 {unidades.length} unidades
               </dd>
-              <dd className="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5 sm:mt-1">Grupos activos en Villas Otoch</dd>
+              <dd className="text-xs text-slate-500 font-medium mt-1">Grupos activos en Villas Otoch</dd>
             </div>
 
             {/* 3. Puntuación general acumulada (Rojo JA) */}
             <div className="p-3 sm:p-5 text-center">
-              <dt className="text-[11px] sm:text-xs font-semibold text-slate-500">Puntuación acumulada</dt>
-              <dd className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-bold text-[#0d2b56]">
+              <dt className="text-xs font-semibold text-slate-500">Puntuación acumulada</dt>
+              <dd className="mt-1 text-xl sm:text-2xl font-bold text-[#0d2b56]">
                 {puntosTotales.toLocaleString()} pts
               </dd>
-              <dd className="text-[11px] sm:text-xs text-[#b71c1c] font-semibold mt-0.5 sm:mt-1">Acumulados en culto joven</dd>
+              <dd className="text-xs text-[#b71c1c] font-semibold mt-1">Acumulados en culto joven</dd>
             </div>
           </dl>
         </div>
@@ -329,16 +329,9 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
                           </div>
 
                           <div className="min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <h3 className="text-sm font-bold text-slate-900 leading-tight truncate">
-                                {grupo.nombre}
-                              </h3>
-                              {esPrimero && (
-                                <span className="rounded-md bg-amber-100 border border-amber-300 px-1.5 py-0.2 text-[10px] font-bold text-amber-900">
-                                  Líder
-                                </span>
-                              )}
-                            </div>
+                            <h3 className="text-sm font-bold text-slate-900 leading-tight truncate">
+                              {grupo.nombre}
+                            </h3>
                             <p className="text-[11px] text-slate-500 truncate mt-0.5">
                               Líder: <span className="text-slate-700">{grupo.lider}</span>
                             </p>
@@ -383,16 +376,9 @@ export default function WeekView({ unidades = [] }: WeekViewProps) {
 
                         {/* Unidad y Líder */}
                         <div className="md:col-span-5">
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-sm font-bold text-slate-900">
-                              {grupo.nombre}
-                            </h3>
-                            {esPrimero && (
-                              <span className="rounded-md bg-amber-100 border border-amber-300 px-2 py-0.5 text-[11px] font-bold text-amber-900">
-                                Líder
-                              </span>
-                            )}
-                          </div>
+                          <h3 className="text-sm font-bold text-slate-900">
+                            {grupo.nombre}
+                          </h3>
                           <p className="text-xs text-slate-500 mt-0.5">
                             Líder: <span className="text-slate-700">{grupo.lider}</span>
                           </p>

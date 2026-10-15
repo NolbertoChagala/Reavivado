@@ -117,7 +117,7 @@ export default function AppLayout({
 
         {/* Acceso al panel administrativo */}
         <button
-          onClick={() => router.push("/admin/puntos")}
+          onClick={() => router.push("/admin")}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95 ${
             scrolled
               ? "bg-[#0d2b56] hover:bg-[#0a1e3d] text-white"

@@ -77,7 +77,7 @@ export default function NavigationBar({
           {/* Botón de acceso al panel administrativo */}
           <button
             onClick={() => {
-              router.push("/admin/puntos");
+              router.push("/admin");
             }}
             className={`relative flex-1 flex flex-col items-center justify-center py-2 px-2.5 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 ${
               pathname.includes("/admin")
