@@ -1,6 +1,6 @@
 import prisma from "@/lib/db";
 import { AdminLayout } from "@/components/layout";
-import { UserManagement } from "@/components/admin/usuarios";
+import { UserManagement } from "@/features/admin";
 import { getCurrentSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Role } from "@prisma/client";
