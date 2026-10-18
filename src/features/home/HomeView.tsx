@@ -7,7 +7,7 @@ import {
   HomePurposeSection,
   HomeReadingSection,
   HomeIdealsSection,
-} from "./home";
+} from "./components";
 import LeadershipFooter from "@/components/layout/LeadershipFooter";
 
 interface Lectura {

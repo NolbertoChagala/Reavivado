@@ -2,9 +2,9 @@
 "use client";
 import { useState } from "react";
 import { AppLayout } from "@/components/layout";
-import DayView from "./HomeView";
-import WeekView from "./UnitsView";
-import MonthlyCalendar from "./Monthly_calendar";
+import { HomeView } from "@/features/home";
+import { UnitsView } from "@/features/units";
+import { CalendarView } from "@/features/calendar";
 import { obtenerLecturaPorFecha, obtenerSemanaActual } from "@/lib/bibleLogic";
 import { useCurrentDate, useScrollIntoView } from "@/hooks";
 
@@ -39,7 +39,7 @@ export default function ReavivadoAppClient({ unidades }: Props) {
   return (
     <AppLayout vistaActual={vista} onChangeVista={handleCambiarVista}>
       <div className={vista === "dia" ? "block" : "hidden"}>
-        <DayView
+        <HomeView
           hoy={fechaActiva}
           lecturaHoy={lecturaHoy}
           unidades={unidades}
@@ -47,7 +47,7 @@ export default function ReavivadoAppClient({ unidades }: Props) {
         />
       </div>
       <div className={vista === "semana" ? "block" : "hidden"}>
-        <WeekView
+        <UnitsView
           hoy={fechaActiva}
           semana={semana}
           refDiaActual={refDiaActual}
@@ -55,7 +55,7 @@ export default function ReavivadoAppClient({ unidades }: Props) {
         />
       </div>
       <div className={vista === "mes" ? "block" : "hidden"}>
-        <MonthlyCalendar 
+        <CalendarView 
           fecha={fechaActiva} 
           onSeleccionarFecha={(fecha) => {
             setFechaSeleccionada(fecha);

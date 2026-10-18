@@ -7,7 +7,7 @@ import {
   UnitsPodiumSection,
   UnitsRankingTable,
   UnitsScoringRules,
-} from "./units";
+} from "./components";
 import LeadershipFooter from "@/components/layout/LeadershipFooter";
 
 interface Unidad {

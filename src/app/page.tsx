@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { ReavivadoAppClient } from "@/components/views";
+import ReavivadoAppClient from "@/components/client/ReavivadoAppClient";
 
 export default async function Page() {
   const unidadesDB = await prisma.unidad.findMany({

@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/auth";
+import { LoginForm } from "@/features/auth";
 
 export const metadata = {
   title: "Acceso Administrativo | Reavivado",

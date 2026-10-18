@@ -3,7 +3,7 @@ import { AdminLayout } from "@/components/layout";
 import { getCurrentSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Role } from "@prisma/client";
-import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminDashboard from "@/features/admin/AdminDashboard";
 
 export default async function AdminInicioPage() {
   const session = await getCurrentSession();
