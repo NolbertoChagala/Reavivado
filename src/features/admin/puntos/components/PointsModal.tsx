@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { Plus, Minus, Pencil, X } from "lucide-react";
 
-type Tipo = "sumar" | "restar" | "fijar";
+export type Tipo = "sumar" | "restar" | "fijar";
 
-interface PointsModalProps {
+export interface PointsModalProps {
   modalData: {
     uId: string;
     nombreGrupo: string;
@@ -46,7 +46,6 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 select-none">
-      {/* Fondo oscuro */}
       <button
         type="button"
         aria-label="Cerrar ventana"
@@ -54,13 +53,11 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
         className="fixed inset-0 cursor-default bg-slate-900/60 backdrop-blur-xs"
       />
 
-      {/* Modal Card */}
       <div
         role="dialog"
         aria-modal="true"
         className="relative z-10 w-full max-w-sm rounded-lg border border-slate-200 bg-white p-5 shadow-xl space-y-4 text-slate-800"
       >
-        {/* Encabezado: Tipo de acción y botón cerrar */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
             <span
@@ -91,7 +88,6 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
           </button>
         </div>
 
-        {/* Tarjeta de la Unidad: Nombre destacado y puntos actuales */}
         <div className="bg-slate-50 border border-slate-200/80 rounded-lg p-3.5">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">
             Unidad JA
@@ -107,13 +103,11 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
           </div>
         </div>
 
-        {/* Formulario */}
         <form action={formAction} className="space-y-4">
           <input type="hidden" name="unidadId" value={modalData.uId} />
           <input type="hidden" name="tipoOperacion" value={tipo} />
           <input type="hidden" name="cantidad" value={valor} />
 
-          {/* Campo de puntos con botones de +/- */}
           <div className="space-y-1.5">
             <label htmlFor="cantidad-input" className="text-xs font-semibold text-slate-700 block">
               {tipo === "fijar" ? "Puntaje total a establecer:" : "Puntos a aplicar:"}
@@ -169,7 +163,6 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
             </div>
           </div>
 
-          {/* Atajos rápidos (10, 20, 30, 50) para sumar o restar */}
           {tipo !== "fijar" && (
             <div className="flex items-center gap-1.5">
               {[10, 20, 30, 50].map((pts) => (
@@ -191,7 +184,6 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
             </div>
           )}
 
-          {/* Resumen simple: total resultante */}
           <div className="flex items-center justify-between p-3 bg-slate-50 rounded-md border border-slate-200 text-xs">
             <span className="text-slate-500 font-medium">Nuevo puntaje final:</span>
             <span className="font-black text-[#0d2b56] text-sm sm:text-base tabular-nums">
@@ -199,7 +191,6 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
             </span>
           </div>
 
-          {/* Botones de acción */}
           <div className="flex gap-2 pt-1">
             <button
               type="button"
@@ -228,3 +219,5 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
     </div>
   );
 }
+
+export default PointsModal;
