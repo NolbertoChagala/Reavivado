@@ -1,5 +1,5 @@
 "use client";
-
+import type { Unidad, Usuario } from "@/types";
 import {
   AdminWelcomeHeader,
   AdminKpiMetrics,
@@ -7,20 +7,6 @@ import {
   AdminScoringCriteria,
   AdminOperatorsList,
 } from "./components";
-
-interface Unidad {
-  id: string;
-  nombreGrupo: string;
-  lider: string;
-  puntos: number;
-}
-
-interface Usuario {
-  id: string;
-  nombre: string;
-  email: string;
-  rol: string;
-}
 
 interface AdminDashboardProps {
   adminName?: string;

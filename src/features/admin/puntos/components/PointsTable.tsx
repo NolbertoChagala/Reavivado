@@ -2,22 +2,14 @@
 
 import React from "react";
 import { Search, X, Plus, Minus, Pencil } from "lucide-react";
-
-export interface Unidad {
-  id: string;
-  nombreGrupo: string;
-  lider: string;
-  puntos: number;
-}
-
-export type TipoOperacion = "sumar" | "restar" | "fijar";
+import type { Unidad, TipoOperacionPuntos } from "@/types/models";
 
 interface PointsTableProps {
   unidades: Unidad[];
   posiciones: Map<string, number>;
   busqueda: string;
   onBusquedaChange: (valor: string) => void;
-  onAbrirModal: (unidad: Unidad, tipo: TipoOperacion) => void;
+  onAbrirModal: (unidad: Unidad, tipo: TipoOperacionPuntos) => void;
 }
 
 export default function PointsTable({

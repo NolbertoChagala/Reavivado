@@ -3,21 +3,13 @@
 import { useState, useActionState, useMemo } from "react";
 import { registrarPuntaje } from "@/app/actions/puntos";
 import { CheckCircle2, AlertCircle } from "lucide-react";
+import type { Unidad, TipoOperacionPuntos, ModalPuntosData } from "@/types/models";
 import {
   PointsHeader,
   PointsKpiGrid,
   PointsTable,
   PointsModal,
 } from "./components";
-
-export interface Unidad {
-  id: string;
-  nombreGrupo: string;
-  lider: string;
-  puntos: number;
-}
-
-export type Tipo = "sumar" | "restar" | "fijar";
 
 interface PointsManagementProps {
   unidades: Unidad[];
@@ -27,12 +19,7 @@ interface PointsManagementProps {
 export default function PointsManagement({ unidades }: PointsManagementProps) {
   const [busqueda, setBusqueda] = useState("");
 
-  const [activeModal, setActiveModal] = useState<{
-    uId: string;
-    nombreGrupo: string;
-    puntos: number;
-    tipo: Tipo;
-  } | null>(null);
+  const [activeModal, setActiveModal] = useState<ModalPuntosData | null>(null);
 
   const [state, formAction, isPending] = useActionState(
     async (prevState: unknown, formData: FormData) => {
@@ -62,7 +49,7 @@ export default function PointsManagement({ unidades }: PointsManagementProps) {
     );
   }, [unidadesOrdenadas, busqueda]);
 
-  const abrirModal = (u: Unidad, tipo: Tipo) =>
+  const abrirModal = (u: Unidad, tipo: TipoOperacionPuntos) =>
     setActiveModal({ uId: u.id, nombreGrupo: u.nombreGrupo, puntos: u.puntos, tipo });
 
   return (

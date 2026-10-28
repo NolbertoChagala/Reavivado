@@ -1,13 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
-interface Usuario {
-  id: string;
-  nombre: string;
-  email: string;
-  rol: string;
-}
+import type { Usuario } from "@/types";
 
 interface AdminOperatorsListProps {
   usuarios: Usuario[];

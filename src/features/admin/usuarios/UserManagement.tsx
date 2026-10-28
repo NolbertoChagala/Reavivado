@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { CheckCircle2, AlertTriangle, X } from "lucide-react";
 import { eliminarUsuario } from "@/app/actions/usuarios";
+import type { Usuario } from "@/types";
 import {
   UserHeader,
   UserKpiGrid,
@@ -11,12 +12,6 @@ import {
   CreateUserModal,
 } from "./components";
 
-export interface Usuario {
-  id: string;
-  nombre: string;
-  email: string;
-  rol: string;
-}
 
 interface UserManagementProps {
   usuarios: Usuario[];

@@ -1,13 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
-interface Unidad {
-  id: string;
-  nombreGrupo: string;
-  lider: string;
-  puntos: number;
-}
+import type { Unidad } from "@/types";
 
 interface AdminBarChartProps {
   unidadesOrdenadas: Unidad[];

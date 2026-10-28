@@ -2,16 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Minus, Pencil, X } from "lucide-react";
-
-export type Tipo = "sumar" | "restar" | "fijar";
+import type { ModalPuntosData } from "@/types/models";
 
 export interface PointsModalProps {
-  modalData: {
-    uId: string;
-    nombreGrupo: string;
-    puntos: number;
-    tipo: Tipo;
-  };
+  modalData: ModalPuntosData;
   onClose: () => void;
   formAction: (payload: FormData) => void;
   isPending: boolean;
