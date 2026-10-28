@@ -2,13 +2,7 @@
 
 import React from "react";
 import { Search, X, UserPlus, Shield, Users, Trash2 } from "lucide-react";
-
-export interface Usuario {
-  id: string;
-  nombre: string;
-  email: string;
-  rol: string;
-}
+import type { Usuario } from "@/types";
 
 interface UserTableProps {
   usuarios: Usuario[];
