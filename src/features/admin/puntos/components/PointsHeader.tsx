@@ -1,5 +1,6 @@
 import React from "react";
 import { Award } from "lucide-react";
+import {JA_SCORING_RULES} from "@/constants/app";
 
 export default function PointsHeader() {
   return (
@@ -15,7 +16,7 @@ export default function PointsHeader() {
 
       <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200/80 px-3 py-1.5 rounded-lg text-xs font-bold text-amber-900 shadow-2xs self-start sm:self-auto">
         <Award size={16} className="text-amber-600 shrink-0" />
-        <span>Criterio: +10 pts por pregunta respondida</span>
+        <span>Criterio: {JA_SCORING_RULES.CRITERION_BADGE}</span>
       </div>
     </div>
   );
