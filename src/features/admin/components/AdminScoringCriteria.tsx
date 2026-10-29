@@ -1,5 +1,6 @@
 import React from "react";
 import { BookOpen } from "lucide-react";
+import { JA_SCORING_RULES } from "@/constants/app";
 
 export default function AdminScoringCriteria() {
   return (
@@ -13,13 +14,13 @@ export default function AdminScoringCriteria() {
 
       <div className="p-3 bg-slate-50 rounded-md border border-slate-100 space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-800">Acierto por pregunta contestada</span>
+          <span className="text-xs font-bold text-slate-800">{JA_SCORING_RULES.CRITERION_LABEL}</span>
           <span className="font-bold text-xs text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
-            +10 pts
+            + {JA_SCORING_RULES.POINTS_PER_QUESTION} pts
           </span>
         </div>
         <p className="text-[11px] text-slate-500 leading-relaxed">
-          Cada pregunta respondida correctamente por la unidad suma 10 puntos al acumulado oficial.
+        {JA_SCORING_RULES.CRITERION_DESCRIPTION}
         </p>
       </div>
     </div>
