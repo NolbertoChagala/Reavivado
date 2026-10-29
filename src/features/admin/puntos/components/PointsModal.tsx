@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Minus, Pencil, X } from "lucide-react";
-import type { ModalPuntosData } from "@/types/models";
+import { JA_SCORING_RULES } from "@/constants/app";
+import type { ModalPuntosData } from "@/types";
 
 export interface PointsModalProps {
   modalData: ModalPuntosData;
@@ -109,10 +110,10 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => stepCantidad(-10)}
+                onClick={() => stepCantidad(-JA_SCORING_RULES.STEP_INTERVAL)}
                 className="h-11 w-11 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-md flex items-center justify-center text-slate-700 cursor-pointer active:scale-95 transition-all"
-                title="Restar 10"
-                aria-label="Restar 10"
+                title={`Restar ${JA_SCORING_RULES.STEP_INTERVAL}`}
+                aria-label={`Restar ${JA_SCORING_RULES.STEP_INTERVAL}`}
               >
                 <Minus size={16} strokeWidth={2.5} />
               </button>
@@ -147,10 +148,10 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
 
               <button
                 type="button"
-                onClick={() => stepCantidad(10)}
+                onClick={() => stepCantidad(JA_SCORING_RULES.STEP_INTERVAL)}
                 className="h-11 w-11 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-md flex items-center justify-center text-slate-700 cursor-pointer active:scale-95 transition-all"
-                title="Sumar 10"
-                aria-label="Sumar 10"
+                title={`Sumar ${JA_SCORING_RULES.STEP_INTERVAL}`}
+                aria-label={`Sumar ${JA_SCORING_RULES.STEP_INTERVAL}`}
               >
                 <Plus size={16} strokeWidth={2.5} />
               </button>
@@ -159,7 +160,7 @@ export function PointsModal({ modalData, onClose, formAction, isPending }: Point
 
           {tipo !== "fijar" && (
             <div className="flex items-center gap-1.5">
-              {[10, 20, 30, 50].map((pts) => (
+              {JA_SCORING_RULES.QUICK_PRESETS.map((pts) => (
                 <button
                   key={pts}
                   type="button"
