@@ -1,23 +1,24 @@
-// import type { NextConfig } from "next";
-
-// const nextConfig: NextConfig = {
-//   /* config options here */
-//   reactCompiler: true,
-// };
-
-// export default nextConfig;
-
+import { NextConfig } from "next";
 import withPWAInit from "@ducanh2912/next-pwa"
+import withBundleAnalyzer from "@next/bundle-analyzer";
 
-// Configuración de Next.js con PWA
+// Configutación base de Next.js
+const nextConfig: NextConfig = {
+  reactCompiler: true,
+  turbopack: {},
+};
+
+// 1. Envolver la configuración de PWA
 const withPWA = withPWAInit({
   dest: "public",
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
 })
 
-// Exportar la configuración de Next.js con PWA habilitado
-export default withPWA({
-  reactCompiler: true,
-  turbopack: {},
-})
+// 2. Envolver la configuración de Bundle Analyzer
+const withAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withAnalyzer(withPWA(nextConfig));
+
