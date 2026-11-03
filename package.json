@@ -6,7 +6,7 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "build": "prisma generate && next build",
-    "analyze": "cross-env ANALYZE=true prisma generate && cross-env ANALYZE=true next build",
+    "analyze": "cross-env ANALYZE=true prisma generate && cross-env ANALYZE=true next build --webpack",
     "start": "next start",
     "lint": "eslint"
   },
@@ -19,10 +19,10 @@
     "dotenv": "^17.4.2",
     "html-to-image": "^1.11.13",
     "lucide-react": "^0.562.0",
-    "next": "^16.4.0",
+    "next": "^16.4.5",
     "pg": "^8.20.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "cross-env": "^10.1.0",
     "eslint": "^9",
-    "eslint-config-next": "^16.4.0",
+    "eslint-config-next": "^16.4.5",
     "prisma": "^7.8.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
