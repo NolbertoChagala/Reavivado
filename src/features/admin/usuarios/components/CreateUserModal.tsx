@@ -3,6 +3,7 @@
 import { useEffect, useState, useActionState } from "react";
 import { UserPlus, User, Mail, Lock, Shield, X, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { crearUsuario } from "@/app/actions/usuarios";
+import { ActionResult } from "@/types";
 
 interface CreateUserModalProps {
   isOpen: boolean;
@@ -14,10 +15,10 @@ export function CreateUserModal({ isOpen, onClose, onSuccess }: CreateUserModalP
   const [mostrarPass, setMostrarPass] = useState(false);
 
   const [state, formAction, isPending] = useActionState(
-    async (prevState: unknown, formData: FormData) => {
+    async (prevState: ActionResult | null, formData: FormData) => {
       const res = await crearUsuario(prevState, formData);
       if (res?.success) {
-        if (onSuccess) onSuccess(res.message);
+        if (onSuccess && res.message) onSuccess(res.message);
         onClose();
       }
       return res;
