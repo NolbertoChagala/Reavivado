@@ -7,8 +7,12 @@ import { redirect } from "next/navigation";
 import { createSessionToken, Role } from "@/lib/session";
 import { LoginSchema } from "@/lib/validations";
 import { checkRateLimit, recordFailedAttempt, resetRateLimit } from "@/lib/rate-limit";
+import type { ActionResult } from "@/types";
 
-export async function login(prevState: any, formData: FormData) {
+export async function login(
+  _prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
   const rawEmail = (formData.get("email") as string) || "";
   const rawPassword = (formData.get("password") as string) || "";
 
@@ -20,6 +24,7 @@ export async function login(prevState: any, formData: FormData) {
   const { isBlocked, remainingMinutes } = checkRateLimit({ key: rateLimitKey });
   if (isBlocked) {
     return {
+      success: false,
       error: `Demasiados intentos fallidos. Por seguridad, espera ${remainingMinutes} minuto(s) antes de intentar nuevamente.`,
     };
   }
@@ -31,6 +36,7 @@ export async function login(prevState: any, formData: FormData) {
 
   if (!validationResult.success) {
     return {
+      success: false,
       error: validationResult.error.issues[0]?.message || "Credenciales inválidas.",
     };
   }
@@ -43,13 +49,13 @@ export async function login(prevState: any, formData: FormData) {
 
   if (!usuario) {
     recordFailedAttempt({ key: rateLimitKey });
-    return { error: "Credenciales inválidas." };
+    return { success: false, error: "Credenciales inválidas." };
   }
 
   const passwordMatch = await bcrypt.compare(password, usuario.password);
   if (!passwordMatch) {
     recordFailedAttempt({ key: rateLimitKey });
-    return { error: "Credenciales inválidas." };
+    return { success: false, error: "Credenciales inválidas." };
   }
 
   resetRateLimit(rateLimitKey);
@@ -72,7 +78,7 @@ export async function login(prevState: any, formData: FormData) {
   redirect("/admin");
 }
 
-export async function logout() {
+export async function logout(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete("auth_session");
   redirect("/");

@@ -5,8 +5,13 @@ import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
 import { assertAdmin, Role } from "@/lib/session";
 import { CrearUsuarioSchema, EliminarUsuarioSchema } from "@/lib/validations";
+import type { ActionResult } from "@/types";
+import { Prisma } from "@prisma/client";
 
-export async function crearUsuario(prevState: any, formData: FormData) {
+export async function crearUsuario(
+  _prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
   try {
     await assertAdmin();
 
@@ -40,24 +45,25 @@ export async function crearUsuario(prevState: any, formData: FormData) {
 
     revalidatePath("/admin/usuarios");
     return { success: true, message: "Usuario creado correctamente" };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error al crear usuario:", error);
-    if (error?.code === "P2002") {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return {
         success: false,
         message: "Error: El correo electrónico ya se encuentra registrado.",
       };
     }
+    const msg = error instanceof Error ? error.message : "";
     return {
       success: false,
-      message: error?.message?.includes("Acceso denegado")
-        ? error.message
+      message: msg.includes("Acceso denegado")
+        ? msg
         : "Error al registrar usuario.",
     };
   }
 }
 
-export async function eliminarUsuario(usuarioId: string) {
+export async function eliminarUsuario(usuarioId: string): Promise<ActionResult> {
   try {
     const session = await assertAdmin();
 
@@ -87,12 +93,13 @@ export async function eliminarUsuario(usuarioId: string) {
       success: true,
       message: "Cuenta de acceso eliminada correctamente.",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error al eliminar usuario:", error);
+    const msg = error instanceof Error ? error.message : "";
     return {
       success: false,
-      message: error?.message?.includes("Acceso denegado")
-        ? error.message
+      message: msg.includes("Acceso denegado")
+        ? msg
         : "Error al intentar revocar la cuenta.",
     };
   }
