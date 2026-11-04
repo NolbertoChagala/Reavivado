@@ -3,7 +3,7 @@
 import { useState, useActionState, useMemo } from "react";
 import { registrarPuntaje } from "@/app/actions/puntos";
 import { CheckCircle2, AlertCircle } from "lucide-react";
-import type { Unidad, TipoOperacionPuntos, ModalPuntosData } from "@/types/models";
+import type { Unidad, TipoOperacionPuntos, ModalPuntosData, ActionResult } from "@/types/models";
 import {
   PointsHeader,
   PointsKpiGrid,
@@ -22,7 +22,7 @@ export default function PointsManagement({ unidades }: PointsManagementProps) {
   const [activeModal, setActiveModal] = useState<ModalPuntosData | null>(null);
 
   const [state, formAction, isPending] = useActionState(
-    async (prevState: unknown, formData: FormData) => {
+    async (prevState: ActionResult | null, formData: FormData) => {
       const res = await registrarPuntaje(prevState, formData);
       if (res?.success) {
         setActiveModal(null);
