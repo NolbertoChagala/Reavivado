@@ -4,8 +4,12 @@ import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { assertAdmin } from "@/lib/session";
 import { RegistrarPuntajeSchema } from "@/lib/validations";
+import type { ActionResult } from "@/types";
 
-export async function registrarPuntaje(prevState: any, formData: FormData) {
+export async function registrarPuntaje(
+  _prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
   try {
     await assertAdmin();
 
@@ -63,12 +67,13 @@ export async function registrarPuntaje(prevState: any, formData: FormData) {
     revalidatePath("/admin/puntos");
 
     return { success: true, message: mensaje };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error al actualizar puntos:", error);
+    const msg = error instanceof Error ? error.message : "";
     return {
       success: false,
-      message: error?.message?.includes("Acceso denegado")
-        ? error.message
+      message: msg.includes("Acceso denegado")
+        ? msg
         : "Error al guardar. Intenta de nuevo.",
     };
   }
