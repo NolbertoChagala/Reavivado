@@ -15,3 +15,20 @@ export interface ModalPuntosData {
   puntos: number;
   tipo: TipoOperacionPuntos;
 }
+/* ───── Contrato Estándar para Server Actions ───── */
+
+export type ActionSuccess<T = void> = {
+  success: true;
+  message?: string;
+  error?: never;
+  data?: T;
+};
+
+export type ActionError = {
+  success: false;
+  message?: string;
+  error?: string;
+  data?: never;
+};
+
+export type ActionResult<T = void> = ActionSuccess<T> | ActionError;
