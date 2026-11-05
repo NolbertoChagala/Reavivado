@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { CheckCircle2, AlertTriangle, X } from "lucide-react";
 import { eliminarUsuario } from "@/app/actions/usuarios";
+import { useToast } from "@/hooks";
 import type { Usuario } from "@/types";
 import {
   UserHeader,
@@ -23,7 +24,7 @@ export function UserManagement({ usuarios, currentAdminId }: UserManagementProps
   const [modalCrearAbierto, setModalCrearAbierto] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<{ id: string; nombre: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [toastMsg, setToastMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const { toast, showToast, clearToast } = useToast({duration: 4500});
 
   /* Métricas */
   const totalCuentas = usuarios.length;
@@ -38,13 +39,6 @@ export function UserManagement({ usuarios, currentAdminId }: UserManagementProps
     );
   }, [usuarios, busqueda]);
 
-  function mostrarToast(type: "success" | "error", text: string) {
-    setToastMsg({ type, text });
-    setTimeout(() => {
-      setToastMsg((prev) => (prev?.text === text ? null : prev));
-    }, 4500);
-  }
-
   async function handleConfirmDelete() {
     if (!confirmDelete) return;
     setIsDeleting(true);
@@ -52,12 +46,12 @@ export function UserManagement({ usuarios, currentAdminId }: UserManagementProps
       const res = await eliminarUsuario(confirmDelete.id);
       if (res.success) {
         setConfirmDelete(null);
-        mostrarToast("success", res.message || "Acceso revocado correctamente.");
+        showToast("success", res.message || "Acceso revocado correctamente.");
       } else {
-        mostrarToast("error", res.message || "No se pudo eliminar el usuario.");
+        showToast("error", res.message || "No se pudo eliminar el usuario.");
       }
     } catch {
-      mostrarToast("error", "Error de red al intentar eliminar.");
+      showToast("error", "Error de red al intentar eliminar.");
     } finally {
       setIsDeleting(false);
     }
@@ -68,26 +62,26 @@ export function UserManagement({ usuarios, currentAdminId }: UserManagementProps
       <UserHeader />
 
       {/* Toast Feedback */}
-      {toastMsg && (
+      {toast && (
         <div
           role="status"
           className={`flex items-center justify-between gap-3 p-3.5 rounded-lg border text-xs font-semibold shadow-xs transition-all ${
-            toastMsg.type === "success"
+            toast.type === "success"
               ? "bg-emerald-50 border-emerald-200 text-emerald-800"
               : "bg-rose-50 border-rose-200 text-rose-800"
           }`}
         >
           <div className="flex items-center gap-2">
-            {toastMsg.type === "success" ? (
+            {toast.type === "success" ? (
               <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
             ) : (
               <AlertTriangle size={16} className="text-rose-600 shrink-0" />
             )}
-            <span>{toastMsg.text}</span>
+            <span>{toast.text}</span>
           </div>
           <button
             type="button"
-            onClick={() => setToastMsg(null)}
+            onClick={() => clearToast()}
             className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer"
           >
             <X size={14} />
@@ -112,7 +106,7 @@ export function UserManagement({ usuarios, currentAdminId }: UserManagementProps
       <CreateUserModal
         isOpen={modalCrearAbierto}
         onClose={() => setModalCrearAbierto(false)}
-        onSuccess={(msg) => mostrarToast("success", msg)}
+        onSuccess={(msg) => showToast("success", msg)}
       />
 
       {confirmDelete && (
