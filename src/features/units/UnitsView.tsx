@@ -8,53 +8,63 @@ import {
   UnitsRankingTable,
   UnitsScoringRules,
 } from "./components";
+import type { GrupoProcesado } from "./components/UnitsRankingTable";
+import type { GrupoPodio } from "./components/UnitsPodiumSection";
 import LeadershipFooter from "@/components/layout/LeadershipFooter";
+import { JA_SCORING_RULES } from "@/constants/app";
 
-interface Unidad {
-  nombre: string;
+export interface InputUnidad {
+  id?: string;
+  nombre?: string;
+  nombreGrupo?: string;
   lider: string;
   puntos: number;
 }
 
 export interface UnitsViewProps {
-  unidades?: Unidad[];
+  unidades?: InputUnidad[];
   hoy?: Date;
-  semana?: any[];
+  semana?: unknown[];
   refDiaActual?: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function UnitsView({ unidades = [] }: UnitsViewProps) {
   const [busqueda, setBusqueda] = useState("");
 
-  const gruposProcesados = useMemo(() => {
-    const ordenados = [...unidades].sort((a, b) => b.puntos - a.puntos);
-    const maxPuntos = ordenados.length > 0 && ordenados[0].puntos > 0 ? ordenados[0].puntos : 1;
+  const unidadesNormalizadas = useMemo(() => {
+    return unidades.map((u) => ({
+      nombre: u.nombreGrupo || u.nombre || "Sin nombre",
+      lider: u.lider || "Sin líder",
+      puntos: u.puntos || 0,
+    }));
+  }, [unidades]);
+
+  const gruposProcesados: GrupoProcesado[] = useMemo(() => {
+    const ordenados = [...unidadesNormalizadas].sort((a, b) => b.puntos - a.puntos);
 
     return ordenados.map((grupo, index) => {
       const grupoAdelante = index > 0 ? ordenados[index - 1] : null;
       const diferenciaAdelante = grupoAdelante ? grupoAdelante.puntos - grupo.puntos : 0;
       const nombreAdelante = grupoAdelante ? grupoAdelante.nombre : "";
-      const porcentaje = Math.round((grupo.puntos / maxPuntos) * 100);
-      const aciertos = Math.floor(grupo.puntos / 10);
+      const aciertos = Math.floor(grupo.puntos / JA_SCORING_RULES.POINTS_PER_QUESTION);
 
       return {
         ...grupo,
+        posicion: index + 1,
+        aciertos,
         diferenciaAdelante,
         nombreAdelante,
-        posicion: index + 1,
-        porcentaje,
-        aciertos,
       };
     });
-  }, [unidades]);
+  }, [unidadesNormalizadas]);
 
-  const liderActual = gruposProcesados[0];
-  const segundoLugar = gruposProcesados[1];
-  const tercerLugar = gruposProcesados[2];
+  const primerLugar: GrupoPodio | undefined = gruposProcesados[0];
+  const segundoLugar: GrupoPodio | undefined = gruposProcesados[1];
+  const tercerLugar: GrupoPodio | undefined = gruposProcesados[2];
 
   const puntosTotales = useMemo(
-    () => unidades.reduce((acc, u) => acc + (u.puntos || 0), 0),
-    [unidades]
+    () => unidadesNormalizadas.reduce((acc, u) => acc + u.puntos, 0),
+    [unidadesNormalizadas]
   );
 
   const gruposFiltrados = useMemo(() => {
@@ -67,14 +77,14 @@ export default function UnitsView({ unidades = [] }: UnitsViewProps) {
 
   return (
     <div className="w-full select-none bg-slate-50 font-sans text-slate-800">
-      <UnitsHeader totalUnidades={unidades.length} />
+      <UnitsHeader totalUnidades={unidadesNormalizadas.length} />
       <UnitsMetricsBridge
-        liderActual={liderActual}
-        totalUnidades={unidades.length}
+        liderActual={primerLugar}
+        totalUnidades={unidadesNormalizadas.length}
         puntosTotales={puntosTotales}
       />
       <UnitsPodiumSection
-        primerLugar={liderActual}
+        primerLugar={primerLugar}
         segundoLugar={segundoLugar}
         tercerLugar={tercerLugar}
         tieneUnidades={gruposProcesados.length > 0}
