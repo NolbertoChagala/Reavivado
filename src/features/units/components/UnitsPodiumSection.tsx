@@ -1,6 +1,7 @@
 import React from "react";
 import { Crown, Medal, Award } from "lucide-react";
 import AdornoJA from "@/components/ui/AdornoJA";
+import {formatNumber} from "@/lib/utils";
 
 export interface GrupoPodio {
   nombre: string;
@@ -56,7 +57,7 @@ export default function UnitsPodiumSection({
             </div>
             <div className="mt-5 border-t border-slate-100 pt-4">
               <span className="text-2xl font-black text-slate-900 tabular-nums block">
-                {segundoLugar ? segundoLugar.puntos.toLocaleString() : "0"} pts
+                {segundoLugar ? formatNumber(segundoLugar.puntos) : "0"} pts
               </span>
               <span className="text-xs text-slate-500 block font-medium mt-0.5">
                 {segundoLugar ? `${segundoLugar.aciertos} preguntas acertadas` : "0 aciertos"}
@@ -82,7 +83,7 @@ export default function UnitsPodiumSection({
             </div>
             <div className="mt-5 border-t border-amber-200/80 pt-4">
               <span className="text-3xl font-black text-slate-900 tabular-nums block">
-                {primerLugar ? primerLugar.puntos.toLocaleString() : "0"} pts
+                {primerLugar ? formatNumber(primerLugar.puntos) : "0"} pts
               </span>
               <span className="text-xs text-slate-600 font-semibold block mt-0.5">
                 {primerLugar ? `${primerLugar.aciertos} preguntas acertadas` : "0 aciertos"}
@@ -103,7 +104,7 @@ export default function UnitsPodiumSection({
                 3° lugar · Bronce
               </span>
               <h3 className="mt-3.5 text-xl font-bold text-slate-900 leading-tight font-serif">
-                {tercerLugar ? primerLugar ? tercerLugar.nombre : "—" : "—"}
+                {tercerLugar ? tercerLugar.nombre : "—"}
               </h3>
               <p className="text-xs text-slate-500 mt-1">
                 Líder: {tercerLugar ? tercerLugar.lider : "Disponible"}
@@ -111,7 +112,7 @@ export default function UnitsPodiumSection({
             </div>
             <div className="mt-5 border-t border-slate-100 pt-4">
               <span className="text-2xl font-black text-slate-900 tabular-nums block">
-                {tercerLugar ? tercerLugar.puntos.toLocaleString() : "0"} pts
+                {tercerLugar ? formatNumber(tercerLugar.puntos) : "0"} pts
               </span>
               <span className="text-xs text-slate-500 block font-medium mt-0.5">
                 {tercerLugar ? `${tercerLugar.aciertos} preguntas acertadas` : "0 aciertos"}

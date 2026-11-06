@@ -1,4 +1,5 @@
 import React from "react";
+import {formatNumber} from "@/lib/utils";
 
 interface GrupoLider {
   nombre: string;
@@ -26,7 +27,7 @@ export default function UnitsMetricsBridge({
               {liderActual ? liderActual.nombre : "Sin registrar"}
             </dd>
             <dd className="text-xs text-amber-700 font-semibold mt-1">
-              {liderActual ? `${liderActual.puntos.toLocaleString()} pts` : "0 pts"}
+              {liderActual ? `${formatNumber(liderActual.puntos)} pts` : "0 pts"}
             </dd>
           </div>
 
@@ -41,7 +42,7 @@ export default function UnitsMetricsBridge({
           <div className="p-3 sm:p-5 text-center">
             <dt className="text-xs font-semibold text-slate-500">Puntuación acumulada</dt>
             <dd className="mt-1 text-xl sm:text-2xl font-bold text-[#0d2b56]">
-              {puntosTotales.toLocaleString()} pts
+              {formatNumber(puntosTotales)} pts
             </dd>
             <dd className="text-xs text-[#b71c1c] font-semibold mt-1">Acumulados en culto joven</dd>
           </div>
