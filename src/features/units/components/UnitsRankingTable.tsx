@@ -1,5 +1,6 @@
 import React from "react";
 import { Search } from "lucide-react";
+import {formatNumber} from "@/lib/utils";
 
 export interface GrupoProcesado {
   nombre: string;
@@ -95,7 +96,7 @@ export default function UnitsRankingTable({
 
                       <div className="text-right shrink-0">
                         <span className="text-base font-black text-slate-900 tabular-nums block leading-tight">
-                          {grupo.puntos.toLocaleString()} pts
+                          {formatNumber(grupo.puntos)} pts
                         </span>
                         <span className="text-[10px] text-slate-500 font-semibold block mt-0.5">
                           {grupo.aciertos} acertadas
@@ -166,7 +167,7 @@ export default function UnitsRankingTable({
 
                       <div className="md:col-span-2 text-right">
                         <span className="text-lg font-black text-slate-900 tabular-nums">
-                          {grupo.puntos.toLocaleString()} pts
+                          {formatNumber(grupo.puntos)} pts
                         </span>
                       </div>
                     </div>

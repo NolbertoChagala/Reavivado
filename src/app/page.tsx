@@ -2,15 +2,15 @@ import prisma from "@/lib/db";
 import ReavivadoAppClient from "@/components/client/ReavivadoAppClient";
 
 export default async function Page() {
-  const unidadesDB = await prisma.unidad.findMany({
+  const unidades = await prisma.unidad.findMany({
     orderBy: { puntos: "desc" },
+    select: {
+      id: true,
+      nombreGrupo: true,
+      lider: true,
+      puntos: true,
+    },
   });
-
-  const unidades = unidadesDB.map((u) => ({
-    nombre: u.nombreGrupo,
-    lider: u.lider,
-    puntos: u.puntos,
-  }));
 
   return <ReavivadoAppClient unidades={unidades} />;
 }

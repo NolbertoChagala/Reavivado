@@ -9,16 +9,14 @@ import {
   HomeIdealsSection,
 } from "./components";
 import LeadershipFooter from "@/components/layout/LeadershipFooter";
+import { VOTO_JA, type NAVIGATION_TABS } from "@/constants/app";
+import type { Unidad } from "@/types";
 
-interface Lectura {
+type VistaApp = keyof typeof NAVIGATION_TABS;
+
+export interface Lectura {
   libro: string;
   capitulo: number;
-}
-
-interface Unidad {
-  nombre: string;
-  lider: string;
-  puntos: number;
 }
 
 interface HomeViewProps {
@@ -27,16 +25,13 @@ interface HomeViewProps {
   voto?: string;
   fondoUrl?: string;
   unidades?: Unidad[];
-  onCambiarVista?: (vista: "dia" | "semana" | "mes") => void;
+  onCambiarVista?: (vista: VistaApp) => void;
 }
-
-const VOTO_JA_POR_DEFECTO =
-  "Por amor al Señor Jesús, prometo tomar parte activa en la obra de los Ministerios Juveniles Adventistas, haciendo cuanto pueda para ayudar a otros, y para terminar la obra del evangelio en todo el mundo";
 
 export default function HomeView({
   hoy,
   lecturaHoy,
-  voto = VOTO_JA_POR_DEFECTO,
+  voto = VOTO_JA,
   onCambiarVista,
 }: HomeViewProps) {
   return (
