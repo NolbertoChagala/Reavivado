@@ -1,5 +1,5 @@
-// src/components/views/ReavivadoAppClient.tsx
 "use client";
+
 import { useState } from "react";
 import { AppLayout } from "@/components/layout";
 import { HomeView } from "@/features/home";
@@ -7,19 +7,17 @@ import { UnitsView } from "@/features/units";
 import { CalendarView } from "@/features/calendar";
 import { obtenerLecturaPorFecha, obtenerSemanaActual } from "@/lib/bibleLogic";
 import { useCurrentDate, useScrollIntoView } from "@/hooks";
+import { NAVIGATION_TABS } from "@/constants/app";
+import type { Unidad } from "@/types";
 
-interface Unidad {
-  nombre: string;
-  lider: string;
-  puntos: number;
-}
+export type VistaApp = keyof typeof NAVIGATION_TABS;
 
-interface Props {
+interface ReavivadoAppClientProps {
   unidades: Unidad[];
 }
 
-export default function ReavivadoAppClient({ unidades }: Props) {
-  const [vista, setVista] = useState<"dia" | "semana" | "mes">("dia");
+export default function ReavivadoAppClient({ unidades }: ReavivadoAppClientProps) {
+  const [vista, setVista] = useState<VistaApp>("dia");
   const hoy = useCurrentDate();
   const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(null);
 
@@ -28,7 +26,7 @@ export default function ReavivadoAppClient({ unidades }: Props) {
   const lecturaHoy = obtenerLecturaPorFecha(fechaActiva);
   const semana = obtenerSemanaActual(fechaActiva);
 
-  const handleCambiarVista = (nuevaVista: "dia" | "semana" | "mes") => {
+  const handleCambiarVista = (nuevaVista: VistaApp) => {
     if (nuevaVista === vista) return;
     setVista(nuevaVista);
     if (typeof window !== "undefined") {
@@ -46,6 +44,7 @@ export default function ReavivadoAppClient({ unidades }: Props) {
           onCambiarVista={handleCambiarVista}
         />
       </div>
+
       <div className={vista === "semana" ? "block" : "hidden"}>
         <UnitsView
           hoy={fechaActiva}
@@ -54,9 +53,10 @@ export default function ReavivadoAppClient({ unidades }: Props) {
           unidades={unidades}
         />
       </div>
+
       <div className={vista === "mes" ? "block" : "hidden"}>
-        <CalendarView 
-          fecha={fechaActiva} 
+        <CalendarView
+          fecha={fechaActiva}
           onSeleccionarFecha={(fecha) => {
             setFechaSeleccionada(fecha);
             handleCambiarVista("dia");
