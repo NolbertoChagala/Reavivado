@@ -34,3 +34,6 @@ export const JA_SCORING_RULES = {
   CRITERION_DESCRIPTION:
     "Cada pregunta respondida correctamente por la unidad suma 10 puntos al acumulado oficial.",
 } as const;
+
+export const VOTO_JA =
+  "Por amor al Señor Jesús, prometo tomar parte activa en la obra de los Ministerios Juveniles Adventistas, haciendo cuanto pueda para ayudar a otros, y para terminar la obra del evangelio en todo el mundo";
