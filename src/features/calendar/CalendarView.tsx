@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
   eachDayOfInterval,
   startOfMonth,
@@ -29,16 +29,19 @@ interface CalendarViewProps {
   onSeleccionarFecha: (fecha: Date) => void;
 }
 
+const STORAGE_KEY_LECTURAS = "reavivado_lecturas_check";
+
 export default function CalendarView({ fecha, onSeleccionarFecha }: CalendarViewProps) {
   const [tipoVista, setTipoVista] = useState<"mes" | "semana">("mes");
-  const [fechaFoco, setFechaFoco] = useState<Date>(fecha || new Date());
-  const [diaSeleccionado, setDiaSeleccionado] = useState<Date>(fecha || new Date());
+  const [fechaFoco, setFechaFoco] = useState<Date>(() => fecha || new Date());
+  const [diaSeleccionado, setDiaSeleccionado] = useState<Date>(() => fecha || new Date());
   const [descargando, setDescargando] = useState(false);
+  const [mostrarFlyer, setMostrarFlyer] = useState(false);
   const [lecturasCompletadas, setLecturasCompletadas] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     try {
-      const checksGuardados = localStorage.getItem("reavivado_lecturas_check");
+      const checksGuardados = localStorage.getItem(STORAGE_KEY_LECTURAS);
       if (checksGuardados) {
         setLecturasCompletadas(JSON.parse(checksGuardados));
       }
@@ -46,51 +49,49 @@ export default function CalendarView({ fecha, onSeleccionarFecha }: CalendarView
     }
   }, []);
 
-  const handleToggleLectura = (fechaKey: string) => {
+  const handleToggleLectura = useCallback((fechaKey: string) => {
     setLecturasCompletadas((prev) => {
       const actualizado = { ...prev, [fechaKey]: !prev[fechaKey] };
       try {
-        localStorage.setItem("reavivado_lecturas_check", JSON.stringify(actualizado));
+        localStorage.setItem(STORAGE_KEY_LECTURAS, JSON.stringify(actualizado));
       } catch {
       }
       return actualizado;
     });
-  };
+  }, []);
 
-  const hoy = new Date();
+  const hoy = useMemo(() => new Date(), []);
 
-  // Días vista mensual
-  const inicioMes = startOfMonth(fechaFoco);
-  const finMes = endOfMonth(fechaFoco);
-  const semanaInicio = startOfWeek(inicioMes, { weekStartsOn: 0 });
-  const semanaFin = endOfWeek(finMes, { weekStartsOn: 0 });
+  // Rangos de fecha mensual memoizados
+  const { inicioMes, diasMes } = useMemo(() => {
+    const inicio = startOfMonth(fechaFoco);
+    const fin = endOfMonth(fechaFoco);
+    const semanaInicio = startOfWeek(inicio, { weekStartsOn: 0 });
+    const semanaFin = endOfWeek(fin, { weekStartsOn: 0 });
 
-  const diasMes = useMemo(() => {
-    return eachDayOfInterval({ start: semanaInicio, end: semanaFin });
-  }, [semanaInicio, semanaFin]);
+    return {
+      inicioMes: inicio,
+      diasMes: eachDayOfInterval({ start: semanaInicio, end: semanaFin }),
+    };
+  }, [fechaFoco]);
 
-  // Días vista semanal
-  const inicioSemana = startOfWeek(fechaFoco, { weekStartsOn: 0 });
-  const finSemana = endOfWeek(fechaFoco, { weekStartsOn: 0 });
+  // Rangos de fecha semanal memoizados
+  const { inicioSemana, diasSemana } = useMemo(() => {
+    const inicio = startOfWeek(fechaFoco, { weekStartsOn: 0 });
+    const fin = endOfWeek(fechaFoco, { weekStartsOn: 0 });
 
-  const diasSemana = useMemo(() => {
-    return eachDayOfInterval({ start: inicioSemana, end: finSemana });
-  }, [inicioSemana, finSemana]);
+    return {
+      inicioSemana: inicio,
+      diasSemana: eachDayOfInterval({ start: inicio, end: fin }),
+    };
+  }, [fechaFoco]);
 
   const handleAnterior = () => {
-    if (tipoVista === "mes") {
-      setFechaFoco(subMonths(fechaFoco, 1));
-    } else {
-      setFechaFoco(subWeeks(fechaFoco, 1));
-    }
+    setFechaFoco((prev) => (tipoVista === "mes" ? subMonths(prev, 1) : subWeeks(prev, 1)));
   };
 
   const handleSiguiente = () => {
-    if (tipoVista === "mes") {
-      setFechaFoco(addMonths(fechaFoco, 1));
-    } else {
-      setFechaFoco(addWeeks(fechaFoco, 1));
-    }
+    setFechaFoco((prev) => (tipoVista === "mes" ? addMonths(prev, 1) : addWeeks(prev, 1)));
   };
 
   const handleHoy = () => {
@@ -102,13 +103,15 @@ export default function CalendarView({ fecha, onSeleccionarFecha }: CalendarView
   const handleDescargarImagen = async () => {
     if (descargando) return;
     setDescargando(true);
+    setMostrarFlyer(true);
+
     try {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const { toPng } = await import("html-to-image");
       const node = document.getElementById("calendario-flyer-descargable");
       if (!node) {
-        console.error("No se encontró el elemento para descargar");
-        setDescargando(false);
-        return;
+        throw new Error("Elemento del flyer no disponible en el DOM");
       }
 
       const dataUrl = await toPng(node, {
@@ -126,6 +129,7 @@ export default function CalendarView({ fecha, onSeleccionarFecha }: CalendarView
       console.error("Error al exportar calendario como imagen:", error);
       alert("Hubo un error al generar la imagen. Intenta de nuevo.");
     } finally {
+      setMostrarFlyer(false);
       setDescargando(false);
     }
   };
@@ -179,11 +183,13 @@ export default function CalendarView({ fecha, onSeleccionarFecha }: CalendarView
 
       <LeadershipFooter />
 
-      <CalendarFlyerTemplate
-        fechaFoco={fechaFoco}
-        inicioMes={inicioMes}
-        diasMes={diasMes}
-      />
+      {mostrarFlyer && (
+        <CalendarFlyerTemplate
+          fechaFoco={fechaFoco}
+          inicioMes={inicioMes}
+          diasMes={diasMes}
+        />
+      )}
     </div>
   );
 }
