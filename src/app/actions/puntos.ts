@@ -1,9 +1,10 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { assertAdmin } from "@/lib/session";
 import { RegistrarPuntajeSchema } from "@/lib/validations";
+import { formatNumber } from "@/lib/utils";
 import type { ActionResult } from "@/types";
 
 export async function registrarPuntaje(
@@ -44,7 +45,7 @@ export async function registrarPuntaje(
         where: { id: unidadId },
         data: { puntos: nuevoPuntaje },
       });
-      mensaje = `Puntaje actualizado: ${unidad.nombreGrupo} ahora tiene ${nuevoPuntaje.toLocaleString()} pts.`;
+      mensaje = `Puntaje actualizado: ${unidad.nombreGrupo} ahora tiene ${formatNumber(nuevoPuntaje)} pts.`;
     } else if (tipoOperacion === "restar") {
       const cantidadAbs = Math.abs(cantidad);
       nuevoPuntaje = Math.max(0, (unidad.puntos || 0) - cantidadAbs);
@@ -52,7 +53,7 @@ export async function registrarPuntaje(
         where: { id: unidadId },
         data: { puntos: nuevoPuntaje },
       });
-      mensaje = `Se descontaron -${cantidadAbs.toLocaleString()} pts a ${unidad.nombreGrupo}. Nuevo total: ${nuevoPuntaje.toLocaleString()} pts.`;
+      mensaje = `Se descontaron -${formatNumber(cantidadAbs)} pts a ${unidad.nombreGrupo}. Nuevo total: ${formatNumber(nuevoPuntaje)} pts.`;
     } else {
       const cantidadAbs = Math.abs(cantidad);
       nuevoPuntaje = (unidad.puntos || 0) + cantidadAbs;
@@ -60,9 +61,10 @@ export async function registrarPuntaje(
         where: { id: unidadId },
         data: { puntos: nuevoPuntaje },
       });
-      mensaje = `Se sumaron +${cantidadAbs.toLocaleString()} pts a ${unidad.nombreGrupo}. Nuevo total: ${nuevoPuntaje.toLocaleString()} pts.`;
+      mensaje = `Se sumaron +${formatNumber(cantidadAbs)} pts a ${unidad.nombreGrupo}. Nuevo total: ${formatNumber(nuevoPuntaje)} pts.`;
     }
 
+    revalidateTag("unidades-ranking", { expire: 0 });
     revalidatePath("/");
     revalidatePath("/admin/puntos");
 
