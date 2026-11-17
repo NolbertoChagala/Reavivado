@@ -6,6 +6,8 @@ export const Role = {
 
 export type Role = (typeof Role)[keyof typeof Role];
 
+const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 7;
+
 function getSessionSecret(): string {
   const secret = process.env.AUTH_SECRET;
 
@@ -22,6 +24,7 @@ function getSessionSecret(): string {
 export interface SessionPayload {
   userId: string;
   role: Role;
+  exp?: number;
 }
 
 function bytesToBase64Url(bytes: Uint8Array): string {
@@ -66,8 +69,12 @@ async function sign(value: string): Promise<string> {
   return bytesToBase64Url(new Uint8Array(signature));
 }
 
-export async function createSessionToken(payload: SessionPayload): Promise<string> {
-  const json = JSON.stringify(payload);
+export async function createSessionToken(payload: Omit<SessionPayload, "exp">): Promise<string> {
+  const fullPayload: SessionPayload = {
+    ...payload,
+    exp: Math.floor(Date.now() / 1000) + SESSION_DURATION_SECONDS,
+  };
+  const json = JSON.stringify(fullPayload);
   const enc = new TextEncoder();
   const base64Data = bytesToBase64Url(enc.encode(json));
   const signature = await sign(base64Data);
@@ -95,7 +102,13 @@ export async function verifySessionToken(token?: string | null): Promise<Session
 
     const dataBytes = base64UrlToBytes(base64Data);
     const dec = new TextDecoder();
-    return JSON.parse(dec.decode(dataBytes)) as SessionPayload;
+    const payload = JSON.parse(dec.decode(dataBytes)) as SessionPayload;
+
+    if (payload.exp && Math.floor(Date.now() / 1000) > payload.exp) {
+      return null;
+    }
+
+    return payload;
   } catch {
     return null;
   }
