@@ -17,6 +17,7 @@ export default function AuthHeroBanner() {
           src="/img/login_hero.jpg"
           alt="Ministerio Juvenil Reavivado JA"
           fill
+          sizes="100vw"
           priority
           className="object-cover object-center"
         />
@@ -39,15 +40,27 @@ export default function AuthHeroBanner() {
         <div className="relative z-10 space-y-2">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-white/10 p-1.5 border border-white/20 backdrop-blur-md flex items-center justify-center shadow-md shrink-0">
-              <Image src={JA} alt="JA" width={24} height={24} className="w-6 h-6 object-contain" priority />
+              <Image
+                src={JA}
+                alt="JA"
+                width={24}
+                height={24}
+                className="w-6 h-6 object-contain"
+                priority
+              />
             </div>
             <div>
-              <p className="text-sm font-black text-white leading-tight">Reavivado JA</p>
-              <p className="text-[10px] font-semibold text-amber-400">Ministerio Juvenil</p>
+              <p className="text-sm font-black text-white leading-tight">
+                Reavivado JA
+              </p>
+              <p className="text-[10px] font-semibold text-amber-400">
+                Ministerio Juvenil
+              </p>
             </div>
           </div>
           <p className="text-xs text-slate-200/95 font-medium leading-relaxed italic line-clamp-2">
-            Ninguno tenga en poco tu juventud, sino sé ejemplo de los creyentes en palabra, conducta, amor, espíritu, fe y pureza.
+            Ninguno tenga en poco tu juventud, sino sé ejemplo de los creyentes
+            en palabra, conducta, amor, espíritu, fe y pureza.
           </p>
         </div>
       </div>
@@ -58,6 +71,7 @@ export default function AuthHeroBanner() {
           src="/img/login_hero.jpg"
           alt="Ministerio Juvenil Reavivado JA"
           fill
+          sizes="50vw"
           priority
           className="object-cover object-center"
         />
@@ -77,8 +91,12 @@ export default function AuthHeroBanner() {
             />
           </div>
           <div>
-            <p className="text-sm font-black text-white leading-tight tracking-tight">Reavivado JA</p>
-            <p className="text-[11px] font-semibold text-brand-gold">Ministerio Juvenil</p>
+            <p className="text-sm font-black text-white leading-tight tracking-tight">
+              Reavivado JA
+            </p>
+            <p className="text-[11px] font-semibold text-brand-gold">
+              Ministerio Juvenil
+            </p>
           </div>
         </div>
 
@@ -87,7 +105,8 @@ export default function AuthHeroBanner() {
             1 Timoteo 4:12
           </span>
           <blockquote className="text-xl xl:text-2xl font-bold text-white leading-snug tracking-tight">
-            Ninguno tenga en poco tu juventud, sino sé ejemplo de los creyentes en palabra, conducta, amor, espíritu, fe y pureza.
+            Ninguno tenga en poco tu juventud, sino sé ejemplo de los creyentes
+            en palabra, conducta, amor, espíritu, fe y pureza.
           </blockquote>
           <p className="text-xs text-slate-300 font-medium">
             Reavivado JA • Ministerio Juvenil

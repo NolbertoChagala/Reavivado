@@ -10,7 +10,6 @@ interface BrandLogoProps {
 }
 
 export function BrandLogo({
-  size = 32,
   showDivider = true,
   className = "",
   isDark = false,
@@ -22,8 +21,6 @@ export function BrandLogo({
         <Image
           src={logoadventista}
           alt="Iglesia Adventista del Séptimo Día"
-          width={size}
-          height={size}
           className="h-7 sm:h-8 w-auto object-contain rounded-full"
           priority
         />
@@ -38,7 +35,7 @@ export function BrandLogo({
         />
       )}
 
-      {/* Logo Jóvenes Adventistas (JA): recortado en elipse exacta para eliminar las esquinas cuadradas blancas del archivo */}
+      {/* Logo Jóvenes Adventistas (JA) */}
       <div
         className="flex items-center justify-center shrink-0 overflow-hidden"
         style={{
@@ -49,9 +46,6 @@ export function BrandLogo({
         <Image
           src={JA}
           alt="Jóvenes Adventistas"
-          width={size}
-          height={size}
-          style={{ width: "auto", height: "auto" }}
           className="h-7 sm:h-8 w-auto object-contain"
           priority
         />
