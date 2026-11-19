@@ -3,6 +3,7 @@ import logoadventista from "@/assets/img/logoadventista.webp";
 import JA from "@/assets/img/JA.webp";
 
 interface BrandLogoProps {
+  size?: number;
   showDivider?: boolean;
   className?: string;
   isDark?: boolean;
