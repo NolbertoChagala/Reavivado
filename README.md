@@ -1,10 +1,12 @@
-# 📖 Reavivado | Sistema de Gestión y Lectura Bíblica
+# Reavivado | Sistema de Gestión y Lectura Bíblica
 
 Plataforma web interactiva desarrollada para la Sociedad de Jóvenes JA (Sede Villas Otoch 4, Cancún), orientada al seguimiento del plan diario de lectura bíblica (*Reavivados por su Palabra*), cronograma de actividades y control administrativo de puntajes por unidades.
 
+**Creado por:** Nolberto Coto Chagala
+
 ---
 
-## 🚀 Tecnologías Principales
+## Tecnologías Principales
 
 - **Framework:** [Next.js 16 (App Router)](https://nextjs.org/) con React 19 y TypeScript.
 - **Estilos:** [Tailwind CSS](https://tailwindcss.com/) con diseño responsivo mobile-first.
@@ -15,7 +17,7 @@ Plataforma web interactiva desarrollada para la Sociedad de Jóvenes JA (Sede Vi
 
 ---
 
-## 🏛️ Arquitectura del Proyecto
+## Arquitectura del Proyecto
 
 El código está estructurado bajo principios de arquitectura modular y separación de responsabilidades:
 
@@ -43,7 +45,7 @@ src/
 
 ---
 
-## ⚙️ Requisitos Previos
+## Requisitos Previos
 
 - Node.js (versión 18 o superior recomendada)
 - Gestor de paquetes: `npm`, `pnpm` o `yarn`
@@ -51,53 +53,53 @@ src/
 
 ---
 
-## 📦 Instalación y Configuración
+## Instalación y Configuración
 
 1. **Clonar el repositorio:**
 
-```bash
+   ```bash
    git clone https://github.com/NolbertoChagala/Reavivado.git
    cd Reavivado
-```
+   ```
 
 2. **Instalar dependencias:**
 
-```bash
+   ```bash
    npm install
-```
+   ```
 
 3. **Configurar variables de entorno:**
 
    Crea un archivo `.env` en la raíz del proyecto basado en el siguiente ejemplo:
 
-```env
+   ```env
    # Conexión principal (pooler de Supabase, para la app en runtime)
    DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
 
    # Conexión directa (para migraciones con Prisma: db push / migrate)
    DIRECT_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres"
-```
+   ```
 
    > **Nota:** Si usas una base de datos PostgreSQL local, ambas variables pueden apuntar a la misma URL, por ejemplo: `postgresql://usuario:password@localhost:5432/reavivado?schema=public`
 
 4. **Sincronizar la base de datos con Prisma:**
 
-```bash
+   ```bash
    npx prisma generate
    npx prisma db push
-```
+   ```
 
 5. **Iniciar el servidor de desarrollo:**
 
-```bash
+   ```bash
    npm run dev
-```
+   ```
 
    Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ---
 
-## 📜 Scripts Disponibles
+## Scripts Disponibles
 
 | Comando | Descripción |
 | --- | --- |
@@ -109,8 +111,16 @@ src/
 
 ---
 
-## 🏛️ Créditos y Organización
+## Autor
 
+- **Desarrollador:** Nolberto Coto Chagala
+- **GitHub:** [@NolbertoChagala](https://github.com/NolbertoChagala)
+
+---
+
+## Créditos y Organización
+
+- **Desarrollo y creación:** Nolberto Coto Chagala
 - **Organización:** Sociedad de Jóvenes JA — Iglesia Adventista del Séptimo Día
 - **Sede:** Villas Otoch 4, Cancún, Quintana Roo
 - **Asociación:** Quintana Roo • Unión Mexicana del Sureste
